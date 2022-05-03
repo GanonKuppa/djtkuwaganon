@@ -1,0 +1,13 @@
+HardwareDebug
+.settings
+.vscode/
+.cproject
+.project
+trr_kuwaganon Debug.launch
+trrkuwaganon HardwareDebug.launch
+~*
+*node_modules/
+*build/
+tool/doxygen/html
+tool/doxygen/*.tmp
+*/.ipynb_checkpoints

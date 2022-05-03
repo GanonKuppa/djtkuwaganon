@@ -1,0 +1,44 @@
+# C, C++ モード
+mode=c
+
+# googleスタイル
+style=google
+
+# インデントはスペース4つ
+indent=spaces=4
+
+# namespace文の中をインデントする
+indent-namespaces
+
+# switch文の中をインデントする
+indent-switches
+
+# case文の中をインデントする
+indent-cases
+
+# タブをスペースに変換
+convert-tabs
+
+# 1行ブロックをそのままにする
+keep-one-line-blocks
+
+# ワンライナーをそのままにする
+keep-one-line-blocks
+
+# int* hoge のようにする
+align-pointer=type
+
+# int& hoge のようにする
+align-reference=type
+
+# 先行する閉ブラケットと閉ヘッダ(例えば'else', 'catch', ...)を行分割する
+break-closing-braces
+
+# ヘッダブロック(例えば 'if', 'while'...)の直前に空行を挿入する
+break-blocks
+
+# フォルダ内のファイルを再帰的に整形する
+#recursive
+
+# 元のファイルのバックアップを作らない 
+suffix=none
