@@ -8,4 +8,6 @@ namespace peripheral_driver {
     void setDoutP44(bool out);
     void setDoutP43(bool out);
     void setDoutP46(bool out);
+    void setDoutP17(bool out);
+    void setDoutPC5(bool out);
 }

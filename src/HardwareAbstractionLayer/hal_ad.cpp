@@ -14,7 +14,7 @@ namespace hal {
 
     uint16_t startAD0() {
 #ifndef SILS
-        return peripheral_driver::startAD_AN109();
+        return peripheral_driver::startAD_AN113();
 #else
         return 0;
 #endif
@@ -65,7 +65,7 @@ namespace hal {
 
     uint16_t getAD0() {
 #ifndef SILS
-        return peripheral_driver::getAD_AN109();
+        return peripheral_driver::getAD_AN113();
 #else
         return 0;
 #endif

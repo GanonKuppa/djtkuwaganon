@@ -4,7 +4,7 @@
 
 namespace peripheral_driver {
     void initGpio() {
-        //未使用ピンの処理
+        // 未使用ピンの処理
         PORT0.PDR.BYTE = (uint8_t) (PORT0.PDR.BYTE | 0x0F);
         PORT1.PDR.BYTE = (uint8_t) (PORT1.PDR.BYTE | 0x03);
         PORT5.PDR.BYTE = (uint8_t) (PORT5.PDR.BYTE | 0x40);
@@ -16,15 +16,19 @@ namespace peripheral_driver {
         PORTG.PDR.BYTE = (uint8_t) (PORTG.PDR.BYTE | 0xFF);
         PORTJ.PDR.BYTE = (uint8_t) (PORTJ.PDR.BYTE | 0x20);
 
-        //FCLEDピン設定
+        // FCLEDピン設定
         PORT2.PDR.BIT.B2 = 1; //B P22
         PORT2.PDR.BIT.B1 = 1; //G P21
         PORT2.PDR.BIT.B0 = 1; //R P20
 
-        //センサLED
-        PORT4.PDR.BIT.B4 = 1; // LED_IMU_SEL0 P44
+        // センサLED
+        PORT4.PDR.BIT.B4 = 1; // LED_MUL_SEL0 P44
         PORT4.PDR.BIT.B3 = 1; // LED_MUL_SEL1 P43
         PORT4.PDR.BIT.B6 = 1; // SEN_OUT P46
+
+        // 表示用LED
+        PORT1.PDR.BIT.B7 = 1; // LED_R
+        PORTC.PDR.BIT.B5 = 1; // LED_L
 
     }
 
@@ -50,6 +54,14 @@ namespace peripheral_driver {
 
     void setDoutP46(bool out) {
         PORT4.PODR.BIT.B6 = out;
+    }
+
+    void setDoutP17(bool out) {
+        PORT1.PODR.BIT.B7 = out;
+    }
+
+    void setDoutPC5(bool out) {
+        PORTC.PODR.BIT.B5 = out;
     }
 
 }

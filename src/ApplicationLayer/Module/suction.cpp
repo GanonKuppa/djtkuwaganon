@@ -16,14 +16,16 @@
 #include "msgBroker.h"
 
 
-namespace module {
-
+namespace module{
+    
     Suction::Suction() :
-        _duty(0.0f),
-        _target_duty(0.0f),
-        _voltage(4.2f) {
+    _duty(0.0f),  
+    _target_duty(0.0f),
+    _voltage(4.2f)
+    {
         setModuleName("Suction");
-        hal::setDutyPWM0(0.0f);
+        hal::setDutyPWM0(1.0f - 0.0f);
+        hal::setDutyPWM5(1.0f - 0.0f);
     }
 
     void Suction::updateEvery() {
@@ -36,7 +38,6 @@ namespace module {
 
         // バッテリー残量が少なくなったことをファンを低速回転させることで通知
         bool is_low_voltage = bat_msg.is_low_voltage;
-
         if(is_low_voltage && nav_msg.mode != ENavMode::FASTEST && nav_msg.mode != ENavMode::SEARCH) {
             _target_duty = 0.1f;
         }
@@ -49,30 +50,33 @@ namespace module {
             else if(_duty > _target_duty) _duty -= _delta_t* RATE_OF_CHANGE;
 
             float max_voltage_duty = _duty * MAX_VOLTAGE / _voltage;
-            hal::setDutyPWM0(max_voltage_duty);
+            hal::setDutyPWM0(1.0f - max_voltage_duty);
+            hal::setDutyPWM5(1.0f - max_voltage_duty);
         }
-
-        else {
+        
+        else{
             _duty = 0.0f;
             _target_duty = 0.0f;
-            hal::setDutyPWM0(0.0f);
-        }
+            hal::setDutyPWM0(1.0f - 0.0f);
+            hal::setDutyPWM5(1.0f - 0.0f);
+        }        
 
     }
 
-    void Suction::setDuty(float duty) {
+    void Suction::setDuty(float duty){
         _target_duty = duty;
     }
 
-    float Suction::getDuty() {
+    float Suction::getDuty(){
         return _duty;
     }
 
-    void Suction::debug() {
-        PRINTF_ASYNC("  duty_r : %f\n", Suction::getInstance().getDuty());
+    void Suction::debug(){
+        PRINTF_ASYNC("  duty        : %f\n", _duty);
+        PRINTF_ASYNC("  target_duty : %f\n", _target_duty);
     }
 
-    int usrcmd_suction(int argc, char** argv) {
+    int usrcmd_suction(int argc, char **argv){
         if (ntlibc_strcmp(argv[1], "help") == 0) {
             PRINTF_ASYNC("  status             : print status\r\n");
             PRINTF_ASYNC("  duty  <0.0 to 1.0> : set duty (4.2V = 100%)\r\n");
@@ -84,8 +88,8 @@ namespace module {
             return 0;
         }
 
-        if (ntlibc_strcmp(argv[1], "duty") == 0) {
-            if(argc != 3) {
+        if (ntlibc_strcmp(argv[1], "duty") == 0){
+            if(argc != 3){
                 PRINTF_ASYNC("  invalid param num!\n");
                 return -1;
             }

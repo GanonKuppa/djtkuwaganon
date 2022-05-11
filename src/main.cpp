@@ -20,7 +20,6 @@
 #include "batteryMonitor.h"
 #include "controlMixer.h"
 #include "gamepad.h"
-#include "heater.h"
 #include "imuDriver.h"
 #include "ledController.h"
 #include "logger.h"
@@ -64,8 +63,7 @@ void timerInterrupt0() {
 
     // 毎回行う処理
     {
-        module::Shell::getInstance().cycleEvery();
-        module::Heater::getInstance().cycleEvery();
+        module::Shell::getInstance().cycleEvery();        
         module::Suction::getInstance().cycleEvery();
     }
 
@@ -182,8 +180,7 @@ void object_init() {
 
     module::ParameterManager::getInstance();
     module::ControlMixer::getInstance().setDeltaT(0.001f);
-    module::Gamepad::getInstance().setDeltaT(0.001f);
-    module::Heater::getInstance().setDeltaT(0.00025f);
+    module::Gamepad::getInstance().setDeltaT(0.001f);    
     module::ImuDriver::getInstance().setDeltaT(0.001f);
     module::LedController::getInstance().setDeltaT(0.001f);
     module::Navigator::getInstance().setDeltaT(0.001f);
