@@ -1,0 +1,33 @@
+# パラメータ定義ファイル
+version:
+  majar: 0
+  minor: 0
+description: hoge
+
+#- name:          パラメータ名
+#  propaty:
+#    num:         パラメータの記録番号
+#    type:        パラメータの型 int8, int16, int32, int64, uint8, uint16, uint32, uint64, float32, float64のいずれか
+#    default:     デフォルト値
+#    min:         設定可能最小値
+#    max:         設定可能最大値
+#    description: パラメータの説明文
+
+param:
+  - name: float
+    propaty:
+      group: 
+      type: int8
+      default: 10
+      min: 0
+      max: 40
+      description: ほげほげほげ
+
+  - name: param2
+    propaty:
+      group:
+      type: int16
+      default: 5
+      min: 0
+      max: 10
+      description: ふがふがふが
