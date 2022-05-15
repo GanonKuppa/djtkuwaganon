@@ -40,7 +40,7 @@ namespace module {
         registration<uint8_t>(22, d_turn_pre_edge_correction_enable, "d_turn_pre_edge_correction_enable", 0); //22
         registration<uint8_t>(23, on_wall_center_correction_enable, "on_wall_center_correction_enable", 0); //23
         registration<uint8_t>(24, on_wall_read_correction_enable, "on_wall_read_correction_enable", 0); //24
-        ;//24
+        registration<uint32_t>(25, serial_number, "serial_number", 999); //25
         ;//25
         ;//26
         ;//27
@@ -56,14 +56,14 @@ namespace module {
         registration<float>(37, duty_offset_right_m, "duty_offset_right_m", 0.0f); //37
         ;//38
         ;//39
-        registration<float>(40, al_dist_coef_a, "al_dist_coef_a", 0.0f);;//40
-        registration<float>(41, al_dist_coef_b, "al_dist_coef_b", 0.0f);;//41
-        registration<float>(42, ar_dist_coef_a, "ar_dist_coef_a", 0.0f);;//42
-        registration<float>(43, ar_dist_coef_b, "ar_dist_coef_b", 0.0f);;//43
-        ;//44
-        ;//45
-        ;//46
-        ;//47
+        registration<float>(40, al_dist_coef_a, "al_dist_coef_a", 0.0f); //40
+        registration<float>(41, al_dist_coef_b, "al_dist_coef_b", 0.0f); //41
+        registration<float>(42, ar_dist_coef_a, "ar_dist_coef_a", 0.0f); //42
+        registration<float>(43, ar_dist_coef_b, "ar_dist_coef_b", 0.0f); //43
+        registration<float>(44, l_dist_coef_a, "l_dist_coef_a", 0.0f); //40
+        registration<float>(45, l_dist_coef_b, "l_dist_coef_b", 0.0f); //41
+        registration<float>(46, r_dist_coef_a, "r_dist_coef_a", 0.0f); //42
+        registration<float>(47, r_dist_coef_b, "r_dist_coef_b", 0.0f); //43
         ;//48
         ;//49
         registration<uint8_t>(50, v_fb_enable, "v_fb_enable", 1); //50

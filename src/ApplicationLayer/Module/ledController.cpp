@@ -25,6 +25,11 @@ namespace module {
         _led_r->turn(false);
         _led_g->turn(false);
         _led_b->turn(false);
+
+        _led_right = std::make_unique<Led>(_delta_t, true, hal::setDout6);
+        _led_left = std::make_unique<Led>(_delta_t, true, hal::setDout7);
+        _led_right->turn(false);
+        _led_left->turn(false);
     }
 
     void LedController::setDeltaT(float delta_t) {
@@ -38,6 +43,9 @@ namespace module {
         _led_r->update();
         _led_g->update();
         _led_b->update();
+
+        _led_right->update();
+        _led_left->update();
 
         _oneshot_time -= _delta_t;
 
@@ -60,6 +68,16 @@ namespace module {
         _led_g->turn(g);
         _led_b->turn(b);
     }
+
+    void LedController::turnRightLed(bool out) {
+        _led_right->turn(out);
+    }
+
+    void LedController::turnLeftLed(bool out) {
+        _led_left->turn(out);
+    }
+
+
 
     void LedController::oneshotFcled(bool r, bool g, bool b, float on_time, float off_time) {
         LedController::flashFcled(r, g, b, on_time, off_time);
@@ -92,15 +110,21 @@ namespace module {
         _led_g->debug();
         PRINTF_ASYNC(  "-- led_b --\n");
         _led_b->debug();
+        PRINTF_ASYNC(  "-- led_right --\n");
+        _led_right->debug();
+        PRINTF_ASYNC(  "-- led_left --\n");
+        _led_left->debug();
+
     }
 
     int usrcmd_ledController(int argc, char** argv) {
         if (ntlibc_strcmp(argv[1], "help") == 0) {
             PRINTF_ASYNC("  status                                   :\r\n");
             PRINTF_ASYNC("  oneshot <r> <g> <b> <on_time> <off_time> : call onshotFcled(r, g, b, on_time, off_time)\r\n");
+            PRINTF_ASYNC("  right   <out>                            : call led_right.turn(out)\r\n");
+            PRINTF_ASYNC("  left    <out>                            : call led_left.turn(out)\r\n");
             return 0;
         }
-
 
         if (ntlibc_strcmp(argv[1], "status") == 0) {
             LedController::getInstance().debug();
@@ -124,6 +148,30 @@ namespace module {
             float on_time = std::stof(on_time_str);
             float off_time = std::stof(off_time_str);
             LedController::getInstance().oneshotFcled(r, g, b, on_time, off_time);
+            return 0;
+        }
+
+        if (ntlibc_strcmp(argv[1], "right") == 0) {
+            if(argc != 3) {
+                PRINTF_ASYNC("  invalid param num!\n");
+                return -1;
+            }
+
+            std::string out_str(argv[2]);
+            bool out = std::stoi(out_str);
+            LedController::getInstance().turnRightLed(out);
+            return 0;
+        }
+
+        if (ntlibc_strcmp(argv[1], "left") == 0) {
+            if(argc != 3) {
+                PRINTF_ASYNC("  invalid param num!\n");
+                return -1;
+            }
+
+            std::string out_str(argv[2]);
+            bool out = std::stoi(out_str);
+            LedController::getInstance().turnLeftLed(out);
             return 0;
         }
 

@@ -121,13 +121,13 @@ int usrcmd_ntopt_callback(int argc, char** argv, void* extobj) {
         p++;
     }
 
-    PRINTF_ASYNC("Unknown command found.\r\n");
-    return 0;
+    PRINTF_ASYNC("Unknown command.\r\n");
+    return -1;
 }
 
 int user_callback(const char* text, void* extobj) {
-    ntopt_parse(text, usrcmd_ntopt_callback, 0);
-    writeHistory2Flash(module::Shell::getInstance().getNtsPtr());
+    int parse_ret = ntopt_parse(text, usrcmd_ntopt_callback, 0);
+    if(parse_ret == 0) writeHistory2Flash(module::Shell::getInstance().getNtsPtr());
     return 0;
 }
 
@@ -246,7 +246,7 @@ int usrcmd_info(int argc, char** argv) {
     }
 
     PRINTF_ASYNC("  ");
-    PRINTF_ASYNC("Unknown sub command found\r\n");
+    PRINTF_ASYNC("Unknown sub command\r\n");
     return -1;
 }
 

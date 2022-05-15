@@ -263,9 +263,20 @@ namespace module {
         _ang_v_c[1] = float(_ang_v_raw[1]) - _ang_v_offset[1];
         _ang_v_c[2] = float(_ang_v_raw[2]) - _ang_v_offset[2];
 
+        ParameterManager& pm = ParameterManager::getInstance();
         _ang_v_f[0] = float(_ang_v_c[0]) * gyro_scale;
         _ang_v_f[1] = float(_ang_v_c[1]) * gyro_scale;
         _ang_v_f[2] = float(_ang_v_c[2]) * gyro_scale;
+
+        if(_ang_v_f[0] > 0.0f) _ang_v_f[0] *= pm.gyro0_x_scaler_ccw;
+        else _ang_v_f[0] *= pm.gyro0_x_scaler_cw;
+
+        if(_ang_v_f[1] > 0.0f) _ang_v_f[1] *= pm.gyro0_y_scaler_ccw;
+        else _ang_v_f[1] *= pm.gyro0_y_scaler_cw;
+
+        if(_ang_v_f[2] > 0.0f) _ang_v_f[2] *= pm.gyro0_z_scaler_ccw;
+        else _ang_v_f[2] *= pm.gyro0_z_scaler_ccw;
+
 
         _acc_raw[0] = - concatenate2Byte_int(outx_h_a, outx_l_a);
         _acc_raw[1] = - concatenate2Byte_int(outy_h_a, outy_l_a);

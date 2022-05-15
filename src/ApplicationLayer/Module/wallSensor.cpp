@@ -402,7 +402,7 @@ namespace module {
         float a = pm.al_dist_coef_a;
         float b = pm.al_dist_coef_b;
         float x = std::max(ad, 1.0f);
-        return a * std::pow(ad, b);
+        return a * std::pow(x, b);
     }
 
     float  WallSensor::_aheadDistR(float ad) {
@@ -410,7 +410,7 @@ namespace module {
         float a = pm.ar_dist_coef_a;
         float b = pm.ar_dist_coef_b;
         float x = std::max(ad, 1.0f);
-        return a * std::pow(ad, b);
+        return a * std::pow(x, b);
     }
 
     float  WallSensor::_aheadDist(float dist_al, float dist_ar) {
@@ -489,18 +489,20 @@ namespace module {
 
 
     float WallSensor::_distL(float ad) {
-        constexpr float a = 0.7591730f;
-        constexpr float b = -0.4121754f;
+        ParameterManager& pm = ParameterManager::getInstance();
+        float a = pm.l_dist_coef_a;
+        float b = pm.l_dist_coef_b;
         float x = std::max(ad, 1.0f);
-        return a * std::pow(ad, b);
+        return a * std::pow(x, b);
 
     }
 
     float  WallSensor::_distR(float ad) {
-        constexpr float a = 0.5269620f;
-        constexpr float b = -0.3775151f;
+        ParameterManager& pm = ParameterManager::getInstance();
+        float a = pm.r_dist_coef_a;
+        float b = pm.r_dist_coef_b;
         float x = std::max(ad, 1.0f);
-        return a * std::pow(ad, b);
+        return a * std::pow(x, b);
     }
 
     int16_t WallSensor::_leftMax() {

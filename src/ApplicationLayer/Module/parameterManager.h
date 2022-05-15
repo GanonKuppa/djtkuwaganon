@@ -66,6 +66,7 @@ namespace module {
         uint8_t d_turn_pre_edge_correction_enable; //22
         uint8_t on_wall_center_correction_enable; //23
         uint8_t on_wall_read_correction_enable; //24
+        uint32_t serial_number; //25
 
         uint32_t dusty_tire_section_count; //29
 
@@ -82,6 +83,10 @@ namespace module {
         float al_dist_coef_b; // 41
         float ar_dist_coef_a; // 42
         float ar_dist_coef_b; // 43
+        float l_dist_coef_a; // 44
+        float l_dist_coef_b; // 45
+        float r_dist_coef_a; // 46
+        float r_dist_coef_b; // 47
 
         uint8_t v_fb_enable; //50
         uint8_t v_ff_enable; //51

@@ -119,14 +119,6 @@ void timerInterrupt1() {
 int main(void) {
     halInit();
     startUpInit();
-    module::LedController::getInstance().turnFcled(1,1,1);
-    hal::waitmsec(250);
-    module::LedController::getInstance().turnFcled(0,0,0);
-    hal::waitmsec(50);
-    module::LedController::getInstance().turnFcled(1,1,1);
-    hal::waitmsec(50);
-    module::LedController::getInstance().turnFcled(0,0,0);
-    hal::waitmsec(50);
 
     while(1) {
         auto activity = activity::ActivityFactory::createModeSelect();
@@ -170,6 +162,25 @@ void startUpInit() {
     hal::setPriorityTimerInterrupt1(15);
     hal::setInterruptPeriodTimerInterrupt1(80);
     hal::startTimerInterrupt0();
+
+    module::LedController::getInstance().turnFcled(1,1,1);
+    module::LedController::getInstance().turnRightLed(1);
+    module::LedController::getInstance().turnLeftLed(1);
+    hal::waitmsec(250);
+    module::LedController::getInstance().turnFcled(0,0,0);
+    module::LedController::getInstance().turnRightLed(0);
+    module::LedController::getInstance().turnLeftLed(0);
+    hal::waitmsec(50);
+    module::LedController::getInstance().turnFcled(1,1,1);
+    module::LedController::getInstance().turnRightLed(1);
+    module::LedController::getInstance().turnLeftLed(1);
+    hal::waitmsec(50);
+    module::LedController::getInstance().turnFcled(0,0,0);
+    module::LedController::getInstance().turnRightLed(0);
+    module::LedController::getInstance().turnLeftLed(0);
+    hal::waitmsec(50);
+
+
 }
 
 void object_init() {

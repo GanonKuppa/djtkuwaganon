@@ -128,6 +128,17 @@ namespace activity {
             }
         }
         else if(mode == 5) {
+            float stop_time = 0.3f;
+            float yawrate_max = 5000.0f * DEG2RAD;
+            float yawacc = pm.spin_yawacc = 500.0f * DEG2RAD;
+            uint16_t run_num = 30;
+
+            for(int i=0; i<run_num; i++) {
+                StopFactory::push(stop_time);
+                SpinTurnFactory::push(-360.0f * DEG2RAD, yawrate_max, yawacc);
+                StopFactory::push(stop_time);
+                yawacc += 500.0f * DEG2RAD;
+            }
         }
         else if(mode == 6) {
         }

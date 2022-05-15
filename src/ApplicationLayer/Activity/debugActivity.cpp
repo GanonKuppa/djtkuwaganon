@@ -128,7 +128,7 @@ namespace activity {
             ETurnType turn_type = ETurnType::STRAIGHT_CENTER;
             module::TrajectoryCommander::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
             module::PositionEstimator::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
-            float target_dist = 0.09 * 31.0f + pm.wall2mouse_center_dist;
+            float target_dist = 0.09 * 18.0f + pm.wall2mouse_center_dist;
             float v_0 = 0.0f;
             float v_max = 0.3f;
             float v_end = 0.0f;

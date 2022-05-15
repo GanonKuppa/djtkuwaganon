@@ -57,11 +57,15 @@ namespace hal {
     }
 
     void setDout6(bool out) {
-
+#ifndef SILS
+        peripheral_driver::setDoutP17(out);
+#endif
     }
 
     void setDout7(bool out) {
-
+#ifndef SILS
+        peripheral_driver::setDoutPC5(out);
+#endif
     }
 
 }
