@@ -201,10 +201,10 @@ void StraightTrajectory::update() {
 
     _res_dist = _calcResidualDist(pos_msg.x, pos_msg.y);
 
-    if(_turn_type == ETurnType::STRAIGHT_CENTER_EDGE && nav_msg.corner_type == ECornerType::WALL  && (_target_dist - _cumulative_dist) < 0.07f) {
+    if(_turn_type == ETurnType::STRAIGHT_CENTER_EDGE && nav_msg.corner_type == ECornerType::WALL && _res_dist < 0.07f) {
         _in_detect_edge_area = true;
     }
-    else if(_turn_type == ETurnType::STRAIGHT_CENTER_EDGE && nav_msg.corner_type == ECornerType::PILLAR && (_target_dist - _cumulative_dist) < 0.045f) {
+    else if(_turn_type == ETurnType::STRAIGHT_CENTER_EDGE && nav_msg.corner_type == ECornerType::PILLAR && _res_dist < 0.045f) {
         _in_detect_edge_area = true;
     }
     else if( (_turn_type == ETurnType::DIAGONAL_CENTER_EDGE || (_turn_type == ETurnType::DIAGONAL_EDGE)) &&

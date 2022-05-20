@@ -19,6 +19,7 @@
 #include "positionEstimator.h"
 #include "imuDriver.h"
 #include "logger.h"
+#include "suction.h"
 
 #include "ledController.h"
 
@@ -141,6 +142,30 @@ namespace activity {
             }
         }
         else if(mode == 6) {
+            float suction_duty = module::ParameterManager::getInstance().suction_duty_shortest;
+            module::Suction::getInstance().setDuty(suction_duty);
+            hal::waitmsec(2000);
+
+            ETurnType turn_type;
+
+            if(pm.test_run_wall_flag == 1) {
+                turn_type = ETurnType::STRAIGHT_CENTER;
+            }
+            else {
+                turn_type = ETurnType::STRAIGHT;
+            }
+
+            module::TrajectoryCommander::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
+            module::PositionEstimator::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
+            float target_dist = pm.test_run_x;
+            float v_0 = 0.0f;
+            float v_max = pm.test_run_v;
+            float v_end = 0.0f;
+            float a_acc = pm.test_run_a;
+            float a_dec = pm.test_run_a;
+
+            StraightFactory::push(turn_type, target_dist, v_0, v_max, v_end, a_acc, a_dec);
+            StopFactory::push(2.0f);        
         }
         else if(mode == 7) {
         }
@@ -155,6 +180,7 @@ namespace activity {
 
     void CalibrateFeedForwardActivity::onFinish() {
         module::Logger::getInstance().end();
+        module::Suction::getInstance().setDuty(0.0f);
     }
 
 

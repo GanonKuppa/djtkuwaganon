@@ -104,23 +104,15 @@ namespace activity {
             }
 
             module::TrajectoryCommander::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
-
             module::PositionEstimator::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
-
             float target_dist = 0.09 * 2.0f + pm.wall2mouse_center_dist * 2 - 0.002f;
-
             float v_0 = 0.0f;
-
-            float v_max = 0.1f;
-
+            float v_max = 0.25f;
             float v_end = 0.0f;
-
             float a_acc = 1.0f;
-
             float a_dec = 1.0f;
 
             StraightFactory::push(turn_type, target_dist, v_0, v_max, v_end, a_acc, a_dec);
-
             StopFactory::push(2.0f);
         }
         else if(mode == 4) {
@@ -172,9 +164,6 @@ namespace activity {
             CurveFactory::pushWithStraight(ETurnParamSet::SAFE, ETurnType::TURN_90, ETurnDir::CCW);
             StraightFactory::push(turn_type, target_dist, v_max, v_max, v_end, a_acc, a_dec);
             StopFactory::push(2.0f);
-
-
-
         }
         else if(mode == 7) {
             float yawrate_max = pm.spin_yawrate_max * DEG2RAD;

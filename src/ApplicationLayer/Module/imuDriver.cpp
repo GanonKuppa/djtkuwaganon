@@ -49,7 +49,7 @@ namespace module {
         setModuleName("ImuDriver");
 
         _writeReg(0x10, 0b10101010); // 加速度 6667Hz 4g LPF2_XL_EN = ON
-        _writeReg(0x11, 0b10101100); // ジャイロ 6667Hz 2000dps
+        _writeReg(0x11, 0b10101101); // ジャイロ 6667Hz 4000dps
         _writeReg(0x13, 0b00000010); // ジャイロLPF ON
         _writeReg(0x15, 0b00000001); // ジャイロLPF 223Hz
         _writeReg(0x17, 0b01000000); // 加速度LPF 6667/20
@@ -206,7 +206,7 @@ namespace module {
 
     void ImuDriver::update0() {
 
-        const float gyro_scale = 0.07f; //-2000dps to 2000dps
+        const float gyro_scale = 0.14f; //-4000dps to 4000dps
         const float acc_scale = 0.0011964113f; //-4g to 4g //0.122 * 0.001 * 9.80665
         const float temp_scale = 0.00390625f;   // 256 LSB/degC
         const float temp_offset = 25.0f;

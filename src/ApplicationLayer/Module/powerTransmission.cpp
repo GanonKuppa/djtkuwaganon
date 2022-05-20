@@ -63,10 +63,10 @@ namespace module {
             float duty_r = out_msg.duty_r;
 
             // duty飽和時には回転系制御を優先
-            if(duty_l > 1.0 || duty_r > 1.0) {
+            if(duty_l > 1.0f || duty_r > 1.0f) {
                 float duty_overflow = 0.0f;
 
-                if(duty_l > duty_r ) {
+                if(duty_l > duty_r) {
                     duty_overflow = duty_l - 1.0f;
                 }
                 else {
@@ -76,7 +76,20 @@ namespace module {
                 duty_l -= duty_overflow;
                 duty_r -= duty_overflow;
             }
+/*            else if(duty_l < -1.0f || duty_r < -1.0f) {
+                float duty_overflow = 0.0f;
 
+                if(duty_l < duty_r) {
+                    duty_overflow = duty_l + 1.0f;
+                }  
+                else {
+                    duty_overflow = duty_r + 1.0f;
+                }
+
+                duty_l += duty_overflow;
+                duty_r += duty_overflow;
+            }
+*/
             duty_l = std::clamp<float>(duty_l, -duty_limit, duty_limit);
             duty_r = std::clamp<float>(duty_r, -duty_limit, duty_limit);
 

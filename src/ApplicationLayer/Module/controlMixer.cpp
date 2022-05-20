@@ -269,7 +269,7 @@ namespace module {
 
                 _wall_diag_pidf.update(_ws_msg.dist_al, target);
                 _setp_yawrate += v_now * _wall_diag_pidf.getControlVal();
-                LedController::getInstance().turnFcled(1, 0, 0);
+                module::LedController::getInstance().turnRightLed(1);
             }
             else if (ctrl_cw) {
                 float target = 1.0f;
@@ -279,16 +279,19 @@ namespace module {
 
                 _wall_diag_pidf.update(_ws_msg.dist_ar, target);
                 _setp_yawrate += - v_now * _wall_diag_pidf.getControlVal();
-                LedController::getInstance().turnFcled(1, 0, 1);
+                module::LedController::getInstance().turnLeftLed(1);
             }
             else {
                 _wall_diag_pidf.reset();
-                LedController::getInstance().turnFcled(0, 0, 0);
+                module::LedController::getInstance().turnRightLed(0);
+                module::LedController::getInstance().turnLeftLed(0);
+
             }
         }
         else {
             _wall_diag_pidf.reset();
-            LedController::getInstance().turnFcled(0, 0, 0);
+            module::LedController::getInstance().turnRightLed(0);
+            module::LedController::getInstance().turnLeftLed(0);
         }
 
         // 前壁姿勢位置補正
@@ -383,10 +386,10 @@ namespace module {
         }
 
         // dutyのセット
-        _duty_r_v += _v_pidf.getControlVal();
+        _duty_r_v += _v_pidf.getControlVal();        
         _duty_l_v += _v_pidf.getControlVal();
         _duty_r_yaw +=   _yawrate_pidf.getControlVal();
-        _duty_l_yaw += - _yawrate_pidf.getControlVal();
+        _duty_l_yaw += - _yawrate_pidf.getControlVal();                
         _duty_r = _duty_r_v + _duty_r_yaw;
         _duty_l = _duty_l_v + _duty_l_yaw;
 

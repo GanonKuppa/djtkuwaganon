@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef SILS
 #include <PeripheralDriverLayer/pd_timerInterrupt.h>
+#endif
 
 namespace hal {
     inline void enterCriticalSection() {
