@@ -182,7 +182,7 @@ namespace module {
         }
 
         if(!is_failsafe_pre && _is_failsafe) {
-            PRINTF_PICKLE("!!!!FAILSAFE!!!!      | cor_setp:(%6.3f, %6.3f) |yaw: %6.3| x_error :%6.3f | y_error:%6.3f | aout_err:%d\n",_x_setp/0.09f,_y_setp/0.09f,_yaw, _x_setp - _x, _y_setp - _y, _is_actuator_error);
+            PRINTF_PICKLE("!!!!FAILSAFE!!!!      | cor_setp:(%6.3f, %6.3f) |yaw: %6.3f| x_error :%6.3f | y_error:%6.3f | aout_err:%d\n",_x_setp/0.09f,_y_setp/0.09f,_yaw, _x_setp - _x, _y_setp - _y, _is_actuator_error);
         }
 
         // 現在区画の更新
@@ -214,12 +214,12 @@ namespace module {
             module::LedController::getInstance().oneshotFcled(1, 1, 0, 0.005, 0.005);
 
             // 迷路の壁情報更新
-            WallSensorMsg ws_msg_temp = _ws_msg;
-            ws_msg_temp.dist_l = _pre_read_l_wall_dist;
-            ws_msg_temp.dist_r = _pre_read_r_wall_dist;
-            ws_msg_temp.is_left = _is_pre_read_l_wall;
-            ws_msg_temp.is_right = _is_pre_read_r_wall;
-            EUpdateWallStatus update_wall_status = _maze.updateWall(_x_cur, _y_cur, _azimuth, ws_msg_temp);
+            _ws_msg_read_wall = _ws_msg;
+            _ws_msg_read_wall.dist_l = _pre_read_l_wall_dist;
+            _ws_msg_read_wall.dist_r = _pre_read_r_wall_dist;
+            _ws_msg_read_wall.is_left = _is_pre_read_l_wall;
+            _ws_msg_read_wall.is_right = _is_pre_read_r_wall;
+            EUpdateWallStatus update_wall_status = _maze.updateWall(_x_cur, _y_cur, _azimuth, _ws_msg_read_wall);
 
             if(update_wall_status == EUpdateWallStatus::UPDATED) {
                 //PRINTF_PICKLE("UPDATE_WALL          | x_setp:%6.3f, y_setp:%6.3f | x:%6.3f, y:%6.3f | azimuth:%c\n",_x_setp/0.09f, _y_setp/0.09f, _x/0.09f, _y/0.09f, azimuth2Char(_azimuth));
@@ -494,6 +494,8 @@ namespace module {
                     _maze.makeSearchMap(_x_dest, _y_dest);
                 }
 
+                PRINTF_PICKLE("UPDATE_WALL          | x_setp:%6.3f, y_setp:%6.3f | x:%6.3f, y:%6.3f | azimuth:%c\n",_x_setp/0.09f, _y_setp/0.09f, _x/0.09f, _y/0.09f, azimuth2Char(_azimuth));
+                PRINTF_PICKLE("  dist: %.3f, %.3f, %.3f, %.3f\n", _ws_msg_read_wall.dist_al, _ws_msg_read_wall.dist_l, _ws_msg_read_wall.dist_r, _ws_msg_read_wall.dist_ar);
                 PRINTF_PICKLE("UPDATE_POTENTIAL_MAP | updated_section_queue size %d\n",_updated_section_queue.size());
             }
             else if(cmd == ENavCommand::SAVE_MAZE) {

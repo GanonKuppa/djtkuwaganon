@@ -68,6 +68,7 @@ namespace module {
         bool _in_reread_ahead_area;
 
         WallSensorMsg _ws_msg;
+        WallSensorMsg _ws_msg_read_wall;
         TrajTripletMsg _traj_msg;
         float _x;
         float _y;
