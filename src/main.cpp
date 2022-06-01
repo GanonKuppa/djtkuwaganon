@@ -109,7 +109,7 @@ void timerInterrupt0() {
     }
 
     //hal::hrtStopTimer();
-    hal::resetWdt();
+    //hal::resetWdt();
     int_tick_count++;
 }
 
@@ -152,7 +152,7 @@ void halInit() {
     hal::initTimerInterrupt0();
     hal::initPickle();
     hal::initTimerInterrupt1();
-    hal::initWdt();
+    //hal::initWdt();
 }
 
 

@@ -18,4 +18,8 @@ namespace peripheral_driver {
         WDT.WDTRR = 0x00;
         WDT.WDTRR = 0xff;
     }
+
+    void stopWdt() {
+        // todo
+    }
 }
