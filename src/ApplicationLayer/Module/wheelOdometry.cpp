@@ -273,7 +273,7 @@ namespace module {
 
         }
 
-        PRINTF_ASYNC("  Unknown sub command found\r\n");
+        PRINTF_ASYNC("  Unknown sub command\r\n");
         return -1;
     };
 

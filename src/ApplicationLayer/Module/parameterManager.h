@@ -67,6 +67,7 @@ namespace module {
         uint8_t on_wall_center_correction_enable; //23
         uint8_t on_wall_read_correction_enable; //24
         uint32_t serial_number; //25
+        uint8_t test_section_count;//26
 
         uint32_t dusty_tire_section_count; //29
 

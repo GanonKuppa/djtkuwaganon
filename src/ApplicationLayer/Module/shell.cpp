@@ -56,6 +56,9 @@ static void writeHistory2Flash(ntshell_t* nts);
 static int usrcmd_help(int argc, char** argv);
 static int usrcmd_info(int argc, char** argv);
 static int usrcmd_top(int argc, char** argv);
+static int usrcmd_loggerPrint(int argc, char** argv);
+static int usrcmd_loggerPickle(int argc, char** argv);
+static int usrcmd_batteryStatus(int argc, char** argv);
 
 typedef int (*USRCMDFUNC)(int argc, char** argv);
 
@@ -71,6 +74,9 @@ static const cmd_table_t cmdlist[] = {
     { "help", "help command.", usrcmd_help },
     { "info", "system info.", usrcmd_info },
     { "top", "top command.", usrcmd_top },
+    { "l", "logger print command.", usrcmd_loggerPrint },
+    { "lp", "logger pickle command.", usrcmd_loggerPickle },
+    { "b", "battery status command.", usrcmd_batteryStatus },
     { "batteryMonitor", "BatteryMonitor Module.", module::usrcmd_batteryMonitor },
     { "battery", "alias of batteryMonitor command.", module::usrcmd_batteryMonitor },
     { "controlMixer", "ControlMixer.", module::usrcmd_controlMixer },
@@ -235,7 +241,7 @@ int usrcmd_info(int argc, char** argv) {
 
     if (ntlibc_strcmp(argv[1], "sys") == 0) {
         PRINTF_ASYNC("  ");
-        PRINTF_ASYNC("trrkuwaganon\r\n");
+        PRINTF_ASYNC("djtkuwaganon\r\n");
         return 0;
     }
 
@@ -313,6 +319,25 @@ int usrcmd_top(int argc, char** argv) {
 }
 
 
+static int usrcmd_loggerPrint(int argc, char** argv){
+    char *argv_l[2] = {"logger", "print"};
+    module::usrcmd_logger(2, (char**)(&argv_l));
+    return 0;
+}
+
+static int usrcmd_loggerPickle(int argc, char** argv){
+    char *argv_lp[2] = {"logger", "pickle"};
+    module::usrcmd_logger(2, (char**)(&argv_lp));
+    return 0;
+}
+
+static int usrcmd_batteryStatus(int argc, char** argv){
+    char *argv_bs[2] = {"battery", "status"};
+    module::usrcmd_batteryMonitor(2, (char**)(&argv_bs));
+    return 0;
+}
+
+
 
 
 
@@ -325,7 +350,7 @@ namespace module {
         void* extobj = 0;
         ntshell_init(&nts, serial_read, serial_write, user_callback, extobj);
         readHistoryFromFlash(&nts);
-        ntshell_set_prompt(&nts, "trrkuwaganon>");
+        ntshell_set_prompt(&nts, "djtkuwaganon>");
     };
 
     void Shell::updateEvery() {

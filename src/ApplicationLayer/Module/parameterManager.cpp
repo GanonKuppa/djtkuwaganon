@@ -40,9 +40,8 @@ namespace module {
         registration<uint8_t>(22, d_turn_pre_edge_correction_enable, "d_turn_pre_edge_correction_enable", 0); //22
         registration<uint8_t>(23, on_wall_center_correction_enable, "on_wall_center_correction_enable", 0); //23
         registration<uint8_t>(24, on_wall_read_correction_enable, "on_wall_read_correction_enable", 0); //24
-        registration<uint32_t>(25, serial_number, "serial_number", 999); //25
-        ;//25
-        ;//26
+        registration<uint32_t>(25, serial_number, "serial_number", 999); //25        
+        registration<uint8_t>(26, test_section_count, "test_section_count", 32);
         ;//27
         ;//28
         registration<uint32_t>(29, dusty_tire_section_count, "dusty_tire_section_count", 100);;//29
@@ -744,7 +743,7 @@ namespace module {
             return 0;
         }
 
-        PRINTF_ASYNC("  Unknown sub command found\r\n");
+        PRINTF_ASYNC("  Unknown sub command\r\n");
         return -1;
 
     };

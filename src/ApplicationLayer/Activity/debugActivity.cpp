@@ -120,12 +120,18 @@ namespace activity {
             ETurnType turn_type = ETurnType::STRAIGHT_CENTER;
             module::TrajectoryCommander::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
             module::PositionEstimator::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
-            float target_dist = 0.09 * 18.0f + pm.wall2mouse_center_dist;
+            float target_dist = 0.09f * (float)(pm.test_section_count - 1) + pm.wall2mouse_center_dist;
             float v_0 = 0.0f;
             float v_max = 0.3f;
             float v_end = 0.0f;
             float a_acc = 0.5f;
             float a_dec = 0.5f;
+            for(int8_t i=-10;i<=10;i++){
+                float offset = 0.005f * (float)i;
+                float dia_tire = ((target_dist + offset)/target_dist) * pm.dia_tire;
+                PRINTF_PICKLE("offset: %f | dia_tire = %f \n",offset, dia_tire);
+            }
+
             StraightFactory::push(turn_type, target_dist, v_0, v_max, v_end, a_acc, a_dec);
             StopFactory::push(2.0f);
         }

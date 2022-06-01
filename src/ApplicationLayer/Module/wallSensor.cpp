@@ -426,7 +426,8 @@ namespace module {
         ParameterManager& pm = ParameterManager::getInstance();
         int16_t th_on = pm.wall_corner_threshold_on_l;
         int16_t th_off = pm.wall_corner_threshold_off_l;
-
+        int16_t current = _left_q.at(0);
+#if 0
         if(_left_q.at(0) < th_off) {
             for(int i=1; i<BUFF_SIZE; i++) {
                 if(_left_q.at(i)> th_on) {
@@ -434,15 +435,21 @@ namespace module {
                 }
             }
         }
-
-        return false;
+#endif
+        int16_t max_val = 0;
+        for(int i=0; i<BUFF_SIZE; i++) {
+            if(max_val < _left_q.at(i)) max_val = _left_q.at(i);
+        }
+        float ratio = (float)max_val / (float)current;
+        return (current < th_off && ratio > 1.7f );
     }
 
     bool WallSensor::_isCornerR() {
         ParameterManager& pm = ParameterManager::getInstance();
         int16_t th_on = pm.wall_corner_threshold_on_r;
         int16_t th_off = pm.wall_corner_threshold_off_r;
-
+        int16_t current = _right_q.at(0);
+#if 0
         if(_right_q.at(0) < th_off) {
             for(int i=1; i<BUFF_SIZE; i++) {
                 if(_right_q.at(i)> th_on) {
@@ -450,14 +457,19 @@ namespace module {
                 }
             }
         }
-
-        return false;
+#endif
+        int16_t max_val = 0;
+        for(int i=0; i<BUFF_SIZE; i++) {
+            if(max_val < _right_q.at(i)) max_val = _right_q.at(i);
+        }
+        float ratio = (float)max_val / (float)current;
+        return (current < th_off && ratio > 1.7f );
     }
 
     bool WallSensor::_isDiagCornerL() {
         ParameterManager& pm = ParameterManager::getInstance();
         int16_t th_on = pm.diag_corner_threshold_on_l;
-        int16_t th_off = pm.diag_corner_threshold_off_l;
+        int16_t th_off = pm.diag_corner_threshold_off_l;        
 
         if(_left_q.at(0) < th_off) {
             for(int i=1; i<BUFF_SIZE; i++) {
@@ -681,7 +693,7 @@ namespace module {
             return 0;
         }
 
-        PRINTF_ASYNC("  Unknown sub command found\r\n");
+        PRINTF_ASYNC("  Unknown sub command\r\n");
         return -1;
     }
 }
