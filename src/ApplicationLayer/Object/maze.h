@@ -2,8 +2,8 @@
 
 #include <stdint.h>
 
-// Msg
-#include "navStateMsg.h"
+// Object
+#include "navigationEnum.h"
 #include "wallSensorMsg.h"
 
 
@@ -62,6 +62,7 @@ class Maze {
     bool existsRWall(uint8_t x, uint8_t y, EAzimuth dir);
     bool existsLWall(uint8_t x, uint8_t y, EAzimuth dir);
 
+    bool watchedAWall(uint8_t x, uint8_t y, EAzimuth dir);
     bool watchedRWall(uint8_t x, uint8_t y, EAzimuth dir);
     bool watchedLWall(uint8_t x, uint8_t y, EAzimuth dir);
 
@@ -71,14 +72,19 @@ class Maze {
 
     void writeAheadWall(uint8_t x, uint8_t y, EAzimuth dir, bool ahead);
     void writeSideWall(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool r);
+    
     void writeWall(uint8_t x, uint8_t y, Wall wall);
     void writeWall(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool a, bool r, bool b=false);
     void writeWall(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg);
+    
+    void writeWallNeverWatched(uint8_t x, uint8_t y, Wall wall);
+    void writeWallNeverWatched(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool a, bool r, bool b=false);
+    void writeWallNeverWatched(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg);
+    
     void clearAdjacentWall(uint8_t x, uint8_t y);
     void fourWallUpdatedSectionCheck(uint8_t x, uint8_t y);
 
     EUpdateWallStatus updateWall(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg);
-    EUpdateWallStatus updateWall(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool a, bool r);
     void updateStartSectionWall();
 
     EAzimuth getMinDirection(uint8_t x, uint8_t y, EAzimuth dir);
@@ -90,9 +96,7 @@ class Maze {
     void makeAllAreaSearchMap(uint8_t x, uint8_t y);
     void makeRandomFastestMap(uint8_t x, uint8_t y);
     void makeFastestMap(uint8_t x, uint8_t y);
-    void makeRandomNoEntryMaskMap(uint8_t x, uint8_t y);
-
-    void watchPotentialMap();
+    void makeRandomNoEntryMaskMap(uint8_t x, uint8_t y);    
 
     void serializeMazeData(uint8_t* byte_arr);
     void writeMazeData2Flash();

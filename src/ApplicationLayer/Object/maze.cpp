@@ -174,7 +174,7 @@ Wall Maze::readWall(uint8_t x, uint8_t y) {
     wall.SF = isReached(x, y) || isReached(x, y-1);
 
     return wall;
-};
+}
 
 bool Maze::existsAWall(uint8_t x, uint8_t y, EAzimuth dir ) {
     Wall wall = readWall(x, y);
@@ -203,6 +203,16 @@ bool Maze::existsLWall(uint8_t x, uint8_t y, EAzimuth dir) {
     else if(dir == EAzimuth::N) return wall.W && wall.WF;
     else if(dir == EAzimuth::W) return wall.S && wall.SF;
     else if(dir == EAzimuth::S) return wall.E && wall.EF;
+    else return false;
+}
+
+bool Maze::watchedAWall(uint8_t x, uint8_t y, EAzimuth dir) {
+    Wall wall = readWall(x, y);
+
+    if(dir == EAzimuth::E) return wall.EF;
+    else if(dir == EAzimuth::N) return wall.NF;
+    else if(dir == EAzimuth::W) return wall.WF;
+    else if(dir == EAzimuth::S) return wall.SF;
     else return false;
 }
 
@@ -373,13 +383,90 @@ void Maze::writeWall(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg) 
     writeWall(x, y, dir, l, a, r);
 }
 
+void Maze::writeWallNeverWatched(uint8_t x, uint8_t y, Wall wall) {
+    //壁情報の配列番号に変換
+    int8_t v_left = x-1;
+    int8_t v_right = x;
+    int8_t h_up = y;
+    int8_t h_down = y-1;
+    Wall cur_wall = readWall(x, y);
+
+    //壁情報を書き込み
+    if(v_right != 31 && !cur_wall.EF) {
+        if(wall.E == 1)walls_vertical[v_right] |= (1 << y);
+        else walls_vertical[v_right] &= (~(1 << y));
+    }
+
+    if(h_up != 31 && !cur_wall.NF) {
+        if(wall.N == 1)walls_horizontal[h_up] |= (1 << x);
+        else walls_horizontal[h_up] &= (~(1 << x));
+    }
+
+    if(v_left != -1 && !cur_wall.WF) {
+        if(wall.W == 1)walls_vertical[v_left] |= (1 << y);
+        else walls_vertical[v_left] &= (~(1 << y));
+    }
+
+    if(h_down != -1 && !cur_wall.SF) {
+        if(wall.S == 1)walls_horizontal[h_down] |= (1 << x);
+        else walls_horizontal[h_down] &= (~(1 << x));
+    }
+}
+
+void Maze::writeWallNeverWatched(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool a, bool r, bool b) {
+    Wall wall = readWall(x,y);
+
+    switch(dir) {
+        case EAzimuth::E:  //まうすは東向き
+            if(!wall.WF) wall.W = b;
+            if(!wall.SF) wall.S = r;
+            if(!wall.EF) wall.E = a;
+            if(!wall.NF) wall.N = l;
+            break;
+
+        case EAzimuth::N://まうすは北向き
+            if(!wall.SF) wall.S = b;
+            if(!wall.EF) wall.E = r;
+            if(!wall.NF) wall.N = a;
+            if(!wall.WF) wall.W = l;
+            break;
+
+        case EAzimuth::W://まうすは西向き
+            if(!wall.EF) wall.E = b;
+            if(!wall.NF) wall.N = r;
+            if(!wall.WF) wall.W = a;
+            if(!wall.SF) wall.S = l;
+            break;
+
+        case EAzimuth::S://まうすは南向き
+            if(!wall.NF) wall.N = b;
+            if(!wall.WF) wall.W = r;
+            if(!wall.SF) wall.S = a;
+            if(!wall.EF) wall.E = l;
+            break;
+
+        default:
+            //do nothing;
+            break;
+    }
+
+    writeWall(x, y, wall);
+}
+
+void Maze::writeWallNeverWatched(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg) {
+    bool l = ws_msg.is_left;
+    bool a = ws_msg.is_ahead;
+    bool r = ws_msg.is_right;
+    writeWallNeverWatched(x, y, dir, l, a, r);
+}
+
 void Maze::clearAdjacentWall(uint8_t x, uint8_t y) {
     Wall no_wall;
     no_wall.setByUint8(0);
 
     writeReached(x, y, false);
-    writeWall(x, y, no_wall);
-
+    //writeWall(x, y, no_wall);
+/*
     writeReached(x+1, y, false);
     writeWall(x+1, y, no_wall);
 
@@ -391,6 +478,16 @@ void Maze::clearAdjacentWall(uint8_t x, uint8_t y) {
 
     writeReached(x, y-1, false);
     writeWall(x, y-1, no_wall);
+*/
+}
+
+void Maze::fourWallUpdatedSectionCheck(uint8_t x, uint8_t y) {
+    if(0 <= x && x <= 31 && 0 <= y && y <=31 && !isReached(x, y)) {
+        Wall wall = readWall(x,y);
+        uint8_t watched_wall_num = wall.EF + wall.NF + wall.WF + wall.SF;
+
+        if(watched_wall_num == 4) writeReached(x, y, true);
+    }
 }
 
 // return 1:  探索済みの区画に来て、迷路情報と現在の壁情報が一致
@@ -448,40 +545,15 @@ EUpdateWallStatus Maze::updateWall(uint8_t x, uint8_t y, EAzimuth dir, WallSenso
     }
     ///////////未探索区画に来た時//////////
     else {
-        writeReached(x, y, true);
-        writeWall(x, y, dir, ws_msg);
-
+        writeWallNeverWatched(x, y, dir, ws_msg);
+        writeReached(x, y, true); // みてない壁が見たことになってしまうのでwriteReached()はwriteWallNeverWatched後に呼ぶこと
+        
         fourWallUpdatedSectionCheck(x+1, y);
         fourWallUpdatedSectionCheck(x-1, y);
         fourWallUpdatedSectionCheck(x, y+1);
         fourWallUpdatedSectionCheck(x, y-1);
         return EUpdateWallStatus::UPDATED;
     } //end else
-}
-
-void Maze::fourWallUpdatedSectionCheck(uint8_t x, uint8_t y) {
-    if(0 <= x && x <= 31 && 0 <= y && y <=31 && !isReached(x, y)) {
-        Wall wall = readWall(x,y);
-        uint8_t watched_wall_num = wall.EF + wall.NF + wall.WF + wall.SF;
-
-        if(watched_wall_num == 4) writeReached(x, y, true);
-    }
-}
-
-EUpdateWallStatus Maze::updateWall(uint8_t x, uint8_t y, EAzimuth dir, bool l, bool a, bool r) {
-    if(x==0 && y==0) {
-        writeReached(x,y,true);
-        Wall wall;
-        wall.E = 1;
-        wall.N = 0;
-        wall.W = 1;
-        writeWall(x, y, wall);
-        return EUpdateWallStatus::UPDATED;
-    }
-
-    writeReached(x,y,true);
-    writeWall(x, y, dir, l, a, r);
-    return EUpdateWallStatus::UPDATED;
 }
 
 void Maze::updateStartSectionWall() {
@@ -839,56 +911,6 @@ void Maze::makeRandomNoEntryMaskMap(uint8_t x, uint8_t y) {
         }
     }
 }
-
-void Maze::watchPotentialMap(void) {
-    /////////////////////////////
-    for(int j=15; j>=0; j--) {
-        for(int i=0; i<16; i++) {
-            //////1桁//////////
-            if(p_map[i][j]< 10) {
-                if(i==0) {
-                    PRINTF_ASYNC("%x  %d    ",j, p_map[i][j]);
-                }
-                else if(i==15) {
-                    PRINTF_ASYNC("%d\n",p_map[i][j]);
-                }
-                else {
-                    PRINTF_ASYNC("%d    ",p_map[i][j]);
-                }
-            }
-
-            /////2桁//////////
-            if( (p_map[i][j] > 9) && (p_map[i][j] < 99) ) {
-                if(i==0) {
-                    PRINTF_ASYNC("%x  %d   ",j, p_map[i][j]);
-                }
-                else if(i==15) {
-                    PRINTF_ASYNC("%d\n",p_map[i][j]);
-                }
-                else {
-                    PRINTF_ASYNC("%d   ",p_map[i][j]);
-                }
-            }
-
-            /////3桁//////////
-            if(p_map[i][j] > 100) {
-                if(i==0) {
-                    PRINTF_ASYNC("%x  %d  ",j, p_map[i][j]);
-                }
-                else if(i==15) {
-                    PRINTF_ASYNC("%d\n",p_map[i][j]);
-                }
-                else {
-                    PRINTF_ASYNC("%d  ",p_map[i][j]);
-                }
-            }
-
-        }
-    }
-
-    PRINTF_ASYNC("\n   0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f   \n");
-}
-
 
 void Maze::serializeMazeData(uint8_t* byte_arr) {
     uint8_t* p;
