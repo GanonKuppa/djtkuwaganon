@@ -269,7 +269,7 @@ namespace module {
         float shortest_0_v_135; //207
         float shortest_0_a; //208
         float shortest_0_a_diag; //209
-        ; //210
+        float shortest_0_suction_duty; //210
         ; //211
         ; //212
         ; //213
@@ -289,7 +289,7 @@ namespace module {
         float shortest_1_v_135; //227
         float shortest_1_a; //228
         float shortest_1_a_diag; //229
-        ; //230
+        float shortest_1_suction_duty; //230
         ; //231
         ; //232
         ; //233
@@ -309,7 +309,7 @@ namespace module {
         float shortest_2_v_135; //247
         float shortest_2_a; //248
         float shortest_2_a_diag; //249
-        ; //250
+        float shortest_2_suction_duty; //250
         ; //251
         ; //252
         ; //253
@@ -329,7 +329,7 @@ namespace module {
         float shortest_3_v_135; //267
         float shortest_3_a; //268
         float shortest_3_a_diag; //269
-        ; //270
+        float shortest_3_suction_duty; //270
         ; //271
         ; //272
         ; //273
@@ -349,7 +349,7 @@ namespace module {
         float shortest_4_v_135; //287
         float shortest_4_a; //288
         float shortest_4_a_diag; //289
-
+        float shortest_4_suction_duty; //290
 
 
         //----管理下においた変数たち-----

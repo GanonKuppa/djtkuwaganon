@@ -75,6 +75,12 @@ namespace activity {
 
         StopFactory::push(1.6f);
         float suction_duty = module::ParameterManager::getInstance().suction_duty_shortest;
+        if(param_mode == uint8_t(ETurnParamSet::FAST0)) suction_duty = module::ParameterManager::getInstance().shortest_0_suction_duty;
+        if(param_mode == uint8_t(ETurnParamSet::FAST1)) suction_duty = module::ParameterManager::getInstance().shortest_1_suction_duty;
+        if(param_mode == uint8_t(ETurnParamSet::FAST2)) suction_duty = module::ParameterManager::getInstance().shortest_2_suction_duty;
+        if(param_mode == uint8_t(ETurnParamSet::FAST3)) suction_duty = module::ParameterManager::getInstance().shortest_3_suction_duty;
+        if(param_mode == uint8_t(ETurnParamSet::FAST4)) suction_duty = module::ParameterManager::getInstance().shortest_4_suction_duty;        
+        
         module::Suction::getInstance().setDuty(suction_duty);
         CtrlSetpointMsg ctrl_msg;
         copyMsg(msg_id::CTRL_SETPOINT, &ctrl_msg);

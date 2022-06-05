@@ -225,7 +225,7 @@ namespace module {
         registration<float>(207, shortest_0_v_135, "shortest_0_v_135", 0.4f); //207
         registration<float>(208, shortest_0_a, "shortest_0_a", 4.0f); //208
         registration<float>(209, shortest_0_a_diag, "shortest_0_a_diag", 4.0f); //209
-        ;//210
+        registration<float>(210, shortest_0_suction_duty, "shortest_0_suction_duty", 0.0f); //210
         ;//211
         ;//212
         ;//213
@@ -245,7 +245,7 @@ namespace module {
         registration<float>(227, shortest_1_v_135, "shortest_1_v_135", 0.5f); //227
         registration<float>(228, shortest_1_a, "shortest_1_a", 6.0f); //228
         registration<float>(229, shortest_1_a_diag, "shortest_1_a_diag", 5.0f); //229
-        ;//230
+        registration<float>(230, shortest_1_suction_duty, "shortest_1_suction_duty", 0.0f);//230
         ;//231
         ;//232
         ;//233
@@ -265,8 +265,8 @@ namespace module {
         registration<float>(247, shortest_2_v_135, "shortest_2_v_135", 0.62f); //247
         registration<float>(248, shortest_2_a, "shortest_2_a", 6.0f); //248
         registration<float>(249, shortest_2_a_diag, "shortest_2_a_diag", 6.0f); //249
-        ;//250
-        ;//251
+        registration<float>(250, shortest_2_a_diag, "shortest_2_suction_duty", 0.0f); //250
+        registration<float>(251, shortest_2_suction_duty, "shortest_2_suction_duty", 0.0f); //251
         ;//252
         ;//253
         ;//254
@@ -285,7 +285,7 @@ namespace module {
         registration<float>(267, shortest_3_v_135, "shortest_3_v_135", 0.9f); //267
         registration<float>(268, shortest_3_a, "shortest_3_a", 12.0f); //268
         registration<float>(269, shortest_3_a_diag, "shortest_3_a_diag", 8.0f); //269
-        ;//270
+        registration<float>(270, shortest_3_suction_duty, "shortest_3_suction_duty", 0.0f); //270
         ;//271
         ;//272
         ;//273
@@ -305,6 +305,7 @@ namespace module {
         registration<float>(287, shortest_4_v_135, "shortest_4_v_135", 1.32f); //287
         registration<float>(288, shortest_4_a, "shortest_4_a", 17.0f); //288
         registration<float>(289, shortest_4_a_diag, "shortest_4_a_diag", 12.0f); //289
+        registration<float>(290, shortest_4_suction_duty, "shortest_4_suction_duty", 0.0f); //290
     }
 
 //プログラム中の変数にデータフラッシュの保存域を割り当て
