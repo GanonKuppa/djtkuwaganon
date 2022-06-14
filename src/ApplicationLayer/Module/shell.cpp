@@ -56,6 +56,7 @@ static void writeHistory2Flash(ntshell_t* nts);
 static int usrcmd_help(int argc, char** argv);
 static int usrcmd_info(int argc, char** argv);
 static int usrcmd_top(int argc, char** argv);
+static int usrcmd_calcTest(int argc, char** argv);
 static int usrcmd_loggerPrint(int argc, char** argv);
 static int usrcmd_loggerPickle(int argc, char** argv);
 static int usrcmd_batteryStatus(int argc, char** argv);
@@ -74,6 +75,7 @@ static const cmd_table_t cmdlist[] = {
     { "help", "help command.", usrcmd_help },
     { "info", "system info.", usrcmd_info },
     { "top", "top command.", usrcmd_top },
+    { "calcTest", "calcTest command.", usrcmd_calcTest },
     { "l", "logger print command.", usrcmd_loggerPrint },
     { "lp", "logger pickle command.", usrcmd_loggerPickle },
     { "b", "battery status command.", usrcmd_batteryStatus },
@@ -318,6 +320,77 @@ int usrcmd_top(int argc, char** argv) {
     return 0;
 }
 
+int usrcmd_calcTest(int argc, char** argv){
+    hal::stopTimerInterrupt0();
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        double DELTA_T = 0.001;
+        double SUM = 0.0;
+        for(uint32_t i=0;i<1000;i++){
+            SUM += DELTA_T;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--DADD x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        double DELTA_T = 0.001;
+        double SUM = 1.0;
+        for(uint32_t i=0;i<1000;i++){
+            SUM *= 1.01;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--DMUL x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        double DELTA_T = 0.001;
+        double SUM = 1.0;
+        for(uint32_t i=0;i<1000;i++){
+            SUM /= 1.01;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--DDIV x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        float DELTA_T = 0.001f;
+        float SUM = 0.0f;
+        for(uint32_t i=0;i<1000;i++){
+            SUM += DELTA_T;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--FADD x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        float DELTA_T = 0.001f;
+        float SUM = 1.0f;
+        for(uint32_t i=0;i<1000;i++){
+            SUM *= 1.01f;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--FMUL x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    {
+        uint32_t usec_start = hal::getElapsedUsec();
+        float DELTA_T = 0.001f;
+        float SUM = 1.0f;
+        for(uint32_t i=0;i<1000;i++){
+            SUM /= 1.01f;
+        }
+        uint32_t usec_end = hal::getElapsedUsec();
+        PRINTF_ASYNC("--FDIV x 1000 %d us | SUM = %f\n",usec_end - usec_start, SUM);
+    }
+
+    hal::startTimerInterrupt0();
+    return 0;
+}
 
 static int usrcmd_loggerPrint(int argc, char** argv){
     char *argv_l[2] = {"logger", "print"};
@@ -336,8 +409,6 @@ static int usrcmd_batteryStatus(int argc, char** argv){
     module::usrcmd_batteryMonitor(2, (char**)(&argv_bs));
     return 0;
 }
-
-
 
 
 
