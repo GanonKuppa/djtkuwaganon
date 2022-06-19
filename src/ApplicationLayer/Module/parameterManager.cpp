@@ -265,8 +265,8 @@ namespace module {
         registration<float>(247, shortest_2_v_135, "shortest_2_v_135", 0.62f); //247
         registration<float>(248, shortest_2_a, "shortest_2_a", 6.0f); //248
         registration<float>(249, shortest_2_a_diag, "shortest_2_a_diag", 6.0f); //249
-        registration<float>(250, shortest_2_a_diag, "shortest_2_suction_duty", 0.0f); //250
-        registration<float>(251, shortest_2_suction_duty, "shortest_2_suction_duty", 0.0f); //251
+        registration<float>(250, shortest_2_suction_duty, "shortest_2_suction_duty", 0.0f); //250
+        ;//251
         ;//252
         ;//253
         ;//254

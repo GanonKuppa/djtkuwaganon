@@ -490,9 +490,6 @@ void Maze::fourWallUpdatedSectionCheck(uint8_t x, uint8_t y) {
     }
 }
 
-// return 1:  探索済みの区画に来て、迷路情報と現在の壁情報が一致
-// return 0:  未探索の区画に現在の壁情報を書き込み
-// return -1: 探索済みの区画に来たが、現在の迷路情報と現在の壁情報が矛盾
 EUpdateWallStatus Maze::updateWall(uint8_t x, uint8_t y, EAzimuth dir, WallSensorMsg& ws_msg) {
     if(x == 0 && y == 0) {
         writeReached(x, y, true);
@@ -512,30 +509,22 @@ EUpdateWallStatus Maze::updateWall(uint8_t x, uint8_t y, EAzimuth dir, WallSenso
                         readWall(x,y).S != ws_msg.is_right ||
                         readWall(x,y).N != ws_msg.is_left
                   ) return EUpdateWallStatus::REACHED_ERROR;
-
                 break;
-
             case EAzimuth::N:
                 if(readWall(x,y).N != ws_msg.is_ahead ||
                         readWall(x,y).E != ws_msg.is_right ||
                         readWall(x,y).W != ws_msg.is_left) return EUpdateWallStatus::REACHED_ERROR;
-
                 break;
-
             case EAzimuth::W:
                 if(readWall(x,y).W != ws_msg.is_ahead||
-                        readWall(x,y).N != ws_msg.is_left||
-                        readWall(x,y).S != ws_msg.is_right) return EUpdateWallStatus::REACHED_ERROR;
-
+                        readWall(x,y).N != ws_msg.is_right||
+                        readWall(x,y).S != ws_msg.is_left) return EUpdateWallStatus::REACHED_ERROR;
                 break;
-
             case EAzimuth::S:
                 if(readWall(x,y).S != ws_msg.is_ahead ||
                         readWall(x,y).W != ws_msg.is_right||
                         readWall(x,y).E != ws_msg.is_left) return EUpdateWallStatus::REACHED_ERROR;
-
                 break;
-
             default:
                 //do nothing;
                 break;
@@ -545,9 +534,38 @@ EUpdateWallStatus Maze::updateWall(uint8_t x, uint8_t y, EAzimuth dir, WallSenso
     }
     ///////////未探索区画に来た時//////////
     else {
-        writeWallNeverWatched(x, y, dir, ws_msg);
+        writeWallNeverWatched(x, y, dir, ws_msg);        
         writeReached(x, y, true); // みてない壁が見たことになってしまうのでwriteReached()はwriteWallNeverWatched後に呼ぶこと
-        
+        // すでに見たことのある壁情報とws_msgが矛盾している場合はUPDATED_ERRORを返す
+        {
+            switch(dir) {
+                case EAzimuth::E:
+                    if(readWall(x,y).E != ws_msg.is_ahead ||
+                            readWall(x,y).S != ws_msg.is_right ||
+                            readWall(x,y).N != ws_msg.is_left
+                    ) return EUpdateWallStatus::UPDATED_ERROR;
+                    break;
+                case EAzimuth::N:
+                    if(readWall(x,y).N != ws_msg.is_ahead ||
+                            readWall(x,y).E != ws_msg.is_right ||
+                            readWall(x,y).W != ws_msg.is_left) return EUpdateWallStatus::UPDATED_ERROR;
+                    break;
+                case EAzimuth::W:
+                    if(readWall(x,y).W != ws_msg.is_ahead||
+                            readWall(x,y).N != ws_msg.is_right||
+                            readWall(x,y).S != ws_msg.is_left) return EUpdateWallStatus::UPDATED_ERROR;
+                    break;
+                case EAzimuth::S:
+                    if(readWall(x,y).S != ws_msg.is_ahead ||
+                            readWall(x,y).W != ws_msg.is_right||
+                            readWall(x,y).E != ws_msg.is_left) return EUpdateWallStatus::UPDATED_ERROR;
+                    break;
+                default:
+                    //do nothing;
+                    break;
+            }            
+        }
+
         fourWallUpdatedSectionCheck(x+1, y);
         fourWallUpdatedSectionCheck(x-1, y);
         fourWallUpdatedSectionCheck(x, y+1);
@@ -721,7 +739,7 @@ void Maze::makeSearchMap(uint8_t x, uint8_t y) {
     }
 
 }
-void Maze::makeAllAreaSearchMap(uint8_t x, uint8_t y) {
+EAllAreaSearchStatus Maze::makeAllAreaSearchMap() {
     std::queue<std::pair<uint8_t, uint8_t>> que;
 
     //歩数マップの初期化
@@ -735,15 +753,11 @@ void Maze::makeAllAreaSearchMap(uint8_t x, uint8_t y) {
                 que.push(std::make_pair(i, j));
             }
         }
-    }
-
-    p_map[x][y] = 0; //目的地のポテンシャルは0
-
-    que.push(std::make_pair(x, y));
+    }    
 
     while(!que.empty()) {
-        x = que.front().first;
-        y = que.front().second;
+        uint8_t x = que.front().first;
+        uint8_t y = que.front().second;
         que.pop();
 
         // wall_E
@@ -778,6 +792,9 @@ void Maze::makeAllAreaSearchMap(uint8_t x, uint8_t y) {
             }
         }
     }
+
+    if(p_map[0][0] == 0xffff) return EAllAreaSearchStatus::DONE;
+    else return EAllAreaSearchStatus::NOT_DONE;
 }
 
 void Maze::makeRandomFastestMap(uint8_t x, uint8_t y) {

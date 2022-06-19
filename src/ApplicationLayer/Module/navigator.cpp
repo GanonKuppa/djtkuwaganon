@@ -22,7 +22,7 @@
 #include "trajectoryFactory.h"
 #include "trajectoryInitializer.h"
 #include "ledController.h"
-
+#include "suction.h"
 
 namespace module {
 
@@ -262,38 +262,23 @@ namespace module {
 
                 if(_v_setp <= _v) { // 既知区画加速中か判定
                     _lock_guard = true;
-                    //if(update_wall_status != EUpdateWallStatus::REACHED_ERROR ){
-                    _nav_cmd_queue.push_back(ENavCommand::UPDATE_POTENTIAL_MAP);
-                    _nav_cmd_queue.push_back(ENavCommand::GO_NEXT_SECTION);
-                    //}
-                    //else{
-                    //    _nav_cmd_queue.push_back(ENavCommand::WALL_ERROR);
-                    //}
+
+                    if(update_wall_status == EUpdateWallStatus::UPDATED){
+                        _nav_cmd_queue.push_back(ENavCommand::UPDATE_POTENTIAL_MAP);
+                        _nav_cmd_queue.push_back(ENavCommand::GO_NEXT_SECTION);
+                    }
+                    else if(update_wall_status == EUpdateWallStatus::REACHED){
+                        _nav_cmd_queue.push_back(ENavCommand::UPDATE_POTENTIAL_MAP);
+                        _nav_cmd_queue.push_back(ENavCommand::GO_NEXT_SECTION);
+                    }
+                    else {
+                        _nav_cmd_queue.push_back(ENavCommand::WALL_ERROR);
+                    }
                     _lock_guard = false;
                 }
 
             }
         }
-
-        // 区画中心付近での前壁再確認
-        /*
-        bool pre_in_reread_ahead_area = _in_reread_ahead_area;
-        _in_reread_ahead_area = _inReadWallArea(0.04f, 0.055f);
-
-        if(
-           (    _in_reread_ahead_area && !pre_in_reread_ahead_area &&
-                _navigating &&
-                _mode == ENavMode::SEARCH &&
-                !_is_failsafe
-           ) &&
-           (
-                (_traj_msg.traj_type_pre == ETrajType::STRAIGHT &&_traj_msg.traj_type_now == ETrajType::STRAIGHT && _traj_msg.traj_type_next != ETrajType::CURVE && _ws_msg.dist_a < 0.055f) ||
-                (_traj_msg.traj_type_pre == ETrajType::CURVE && _traj_msg.traj_type_now == ETrajType::STRAIGHT && _ws_msg.dist_a < 0.046f)
-           )
-        ){
-            _nav_cmd_queue.push_back(ENavCommand::RE_UPDATE_NEXT_SECTION);
-        }
-        */
 
         _elapsed_time += _delta_t;
 
@@ -487,8 +472,11 @@ namespace module {
                 StopFactory::push(1.0f);
             }
             else if(cmd == ENavCommand::UPDATE_POTENTIAL_MAP) {
-                if(_sub_mode == ENavSubMode::ALL_AREA_SEARCH && _elapsed_time < _search_limit_time && !_done_outward) {
-                    _maze.makeAllAreaSearchMap(_x_dest, _y_dest);
+                if(_sub_mode == ENavSubMode::ALL_AREA_SEARCH && _elapsed_time < _search_limit_time && _done_outward) {
+                    EAllAreaSearchStatus all_area_search_status = _maze.makeAllAreaSearchMap();
+                    if(all_area_search_status == EAllAreaSearchStatus::DONE){
+                        _maze.makeSearchMap(_x_dest, _y_dest);
+                    }
                 }
                 else {
                     _maze.makeSearchMap(_x_dest, _y_dest);
@@ -503,67 +491,13 @@ namespace module {
                 _maze.writeMazeData2Flash();
                 //hal::leaveCriticalSection();
             }
-            else if(cmd == ENavCommand::RE_UPDATE_NEXT_SECTION) {
-                EAzimuth azimuth_start = _azimuth;
-                bool is_a = true;
-                bool is_l = false;
-                bool is_r = false;
-                bool is_b = false;
-
-                AheadWallCorrectionFactory::push(1.5f, 1.0f, true);
-                hal::waitmsec(10);
-
-                while(_turn_type != ETurnType::NONE)hal::waitmsec(1);
-
-                SpinTurnFactory::push(90.0f * DEG2RAD, _yawrate_max, _yawacc);
-                hal::waitmsec(10);
-
-                while(_turn_type != ETurnType::NONE)hal::waitmsec(1);
-
-                if(_ws_msg.dist_a < 0.065f) {
-                    is_l = true;
-                    AheadWallCorrectionFactory::push(0.4f, 0.1f);
-                }
-
-                SpinTurnFactory::push(90.0f * DEG2RAD, _yawrate_max, _yawacc);
-                hal::waitmsec(10);
-
-                while(_turn_type != ETurnType::NONE)hal::waitmsec(1);
-
-                if(_ws_msg.dist_a < 0.065f) {
-                    is_b = true;
-                    AheadWallCorrectionFactory::push(0.4f, 0.1f);
-                }
-
-                SpinTurnFactory::push(90.0f * DEG2RAD, _yawrate_max, _yawacc);
-                hal::waitmsec(10);
-
-                while(_turn_type != ETurnType::NONE)hal::waitmsec(1);
-
-                if(_ws_msg.dist_a < 0.065f) {
-                    AheadWallCorrectionFactory::push(0.4f, 0.1f);
-                    is_r = true;
-                }
-
-                SpinTurnFactory::push(90.0f * DEG2RAD, _yawrate_max, _yawacc);
-                AheadWallCorrectionFactory::push(0.4f, 0.1f);
-
-                _maze.writeWall(_x_cur, _y_cur, azimuth_start, is_l, is_a, is_r, is_b);
-
-                if(_sub_mode == ENavSubMode::ALL_AREA_SEARCH && _elapsed_time < _search_limit_time) {
-                    _maze.makeAllAreaSearchMap(_x_dest, _y_dest);
-                }
-                else {
-                    _maze.makeSearchMap(_x_dest, _y_dest);
-                }
-
-                EAzimuth dest_dir_next = _maze.getSearchDirection(_x_cur, _y_cur, _azimuth);
-                int8_t rot_times = _maze.calcRotTimes(dest_dir_next, azimuth_start);
-                SpinTurnFactory::push((float)rot_times * 45.0f * DEG2RAD, _yawrate_max, _yawacc);
-                StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.045f + _read_wall_offset2, 0.0f, _v, _v, _a, _a);
-            }
             else if(cmd == ENavCommand::WALL_ERROR) {
                 PRINTF_PICKLE("WALL_ERROR | x_setp:%6.3f, y_setp:%6.3f | x:%6.3f, y:%6.3f\n",_x_setp/0.09f, _y_setp/0.09f, _x/0.09f, _y/0.09f);
+                PRINTF_PICKLE("  dist: %.3f, %.3f, %.3f, %.3f\n", _ws_msg_read_wall.dist_al, _ws_msg_read_wall.dist_l, _ws_msg_read_wall.dist_r, _ws_msg_read_wall.dist_ar);
+                PRINTF_PICKLE(" == before ==\n")
+                _printWall();
+
+
                 EAzimuth azimuth_start = _azimuth;
                 bool is_a = false;
                 bool is_l = false;
@@ -618,8 +552,11 @@ namespace module {
 
                 _maze.writeWall(_x_cur, _y_cur, azimuth_start, is_l, is_a, is_r, is_b);
 
-                if(_sub_mode == ENavSubMode::ALL_AREA_SEARCH && _elapsed_time < _search_limit_time) {
-                    _maze.makeAllAreaSearchMap(_x_dest, _y_dest);
+                if(_sub_mode == ENavSubMode::ALL_AREA_SEARCH && _elapsed_time < _search_limit_time && _done_outward) {
+                    EAllAreaSearchStatus all_area_search_status = _maze.makeAllAreaSearchMap();
+                    if(all_area_search_status == EAllAreaSearchStatus::DONE){
+                        _maze.makeSearchMap(_x_dest, _y_dest);
+                    }
                 }
                 else {
                     _maze.makeSearchMap(_x_dest, _y_dest);
@@ -630,7 +567,8 @@ namespace module {
                 SpinTurnFactory::push((float)rot_times * 45.0f * DEG2RAD, _yawrate_max, _yawacc);
                 StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.045f + _read_wall_offset2, 0.0f, _v, _v, _a, _a);
 
-
+                PRINTF_PICKLE(" == after ==\n")
+                _printWall();
             }
         }
 
@@ -711,6 +649,10 @@ namespace module {
 
             PRINTF_ASYNC("%s+", h_wall.c_str());
         }
+
+        PRINTF_ASYNC(  "  -- all area search status --\n");
+        PRINTF_ASYNC(  "  makeAllAreaSearchMap() = %d\n", (uint8_t)_maze.makeAllAreaSearchMap());
+        PRINTF_ASYNC(  "  1:DONE, 0:NOT_DONE\n", (uint8_t)_maze.makeAllAreaSearchMap());
 
     }
 
@@ -982,15 +924,16 @@ namespace module {
             _yawrate_max = pm.spin_yawrate_max * DEG2RAD;
             _yawacc = pm.spin_yawacc * DEG2RAD;
             _turn_param_set = ETurnParamSet::SEARCH;
-            _v_max = 0.8f;
+            _v_max = 1.2f;
         }
         else {
+            module::Suction::getInstance().setDuty(0.0f);
             _v = TrajectoryInitializer::getInstance().getV(ETurnParamSet::SAFE, ETurnType::TURN_90);
             _a = TrajectoryInitializer::getInstance().getAcc(ETurnParamSet::SAFE, ETurnType::STRAIGHT);
-            _yawrate_max = pm.spin_yawrate_max * DEG2RAD * 0.8f;
-            _yawacc = pm.spin_yawacc * DEG2RAD * 0.8f;
+            _yawrate_max = pm.spin_yawrate_max * DEG2RAD * 0.7f;
+            _yawacc = pm.spin_yawacc * DEG2RAD * 0.7f;
             _turn_param_set = ETurnParamSet::SAFE;
-            _v_max = 0.5f;
+            _v_max = 0.7f;
         }
     }
 

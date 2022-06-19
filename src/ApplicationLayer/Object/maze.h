@@ -28,8 +28,15 @@ class Wall {
 enum class EUpdateWallStatus : int8_t {
     REACHED = 1,
     UPDATED = 0,
-    REACHED_ERROR = -1
+    REACHED_ERROR = -1,
+    UPDATED_ERROR = -2
 };
+
+enum class EAllAreaSearchStatus : int8_t {
+    DONE = 1,
+    NOT_DONE = 0
+};
+
 
 class Maze {
   public:
@@ -93,7 +100,7 @@ class Maze {
     EAzimuth getSearchDirection(uint8_t x, uint8_t y, EAzimuth dir);
 
     void makeSearchMap(uint8_t x, uint8_t y);
-    void makeAllAreaSearchMap(uint8_t x, uint8_t y);
+    EAllAreaSearchStatus makeAllAreaSearchMap();
     void makeRandomFastestMap(uint8_t x, uint8_t y);
     void makeFastestMap(uint8_t x, uint8_t y);
     void makeRandomNoEntryMaskMap(uint8_t x, uint8_t y);    
