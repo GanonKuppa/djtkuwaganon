@@ -10,6 +10,7 @@
 #include "turnEnum.h"
 #include "trajTripletMsg.h"
 #include "navStateMsg.h"
+#include "wallSensorMsg.h"
 
 namespace module {
     class PositionEstimator : public BaseModule<PositionEstimator> {
@@ -32,8 +33,8 @@ namespace module {
         void _aheadWallCorrectionOnWallRead(float dist_a);
 
 
-        void _edgeLCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg);
-        void _edgeRCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg);
+        void _edgeLCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg, WallSensorMsg& ws_msg);
+        void _edgeRCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg, WallSensorMsg& ws_msg);
         void _diagEdgeLCorrection(TrajTripletMsg& traj_msg);
         void _diagEdgeRCorrection(TrajTripletMsg& traj_msg);
 

@@ -122,10 +122,10 @@ namespace activity {
             module::PositionEstimator::getInstance().reset(0.045f, 0.045f - pm.wall2mouse_center_dist, 90.0f * DEG2RAD);
             float target_dist = 0.09f * (float)(pm.test_section_count - 1) + pm.wall2mouse_center_dist;
             float v_0 = 0.0f;
-            float v_max = 0.3f;
+            float v_max = pm.test_run_v;
             float v_end = 0.0f;
-            float a_acc = 0.5f;
-            float a_dec = 0.5f;
+            float a_acc = pm.test_run_a;
+            float a_dec = pm.test_run_a;
             for(int8_t i=-10;i<=10;i++){
                 float offset = 0.005f * (float)i;
                 float dia_tire = ((target_dist + offset)/target_dist) * pm.dia_tire;

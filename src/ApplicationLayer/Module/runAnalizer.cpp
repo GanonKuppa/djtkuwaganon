@@ -50,15 +50,15 @@ namespace module {
     void RunAnalizer::print() {
         ParameterManager& pm = ParameterManager::getInstance();
         PRINTF_ASYNC("  ---- wall_corner_threshold ---- \n")
-        PRINTF_ASYNC("  wall_corner_threshold_on_r  : %8d\n", pm.wall_corner_threshold_on_r);
+        PRINTF_ASYNC("  wall_corner_peak_ratio_r    : %8d\n", pm.wall_corner_peak_ratio_r);
         PRINTF_ASYNC("  wall_corner_threshold_off_r : %8d\n", pm.wall_corner_threshold_off_r);
-        PRINTF_ASYNC("  wall_corner_threshold_on_l  : %8d\n", pm.wall_corner_threshold_on_l);
+        PRINTF_ASYNC("  wall_corner_peak_ratio_l    : %8d\n", pm.wall_corner_peak_ratio_l);
         PRINTF_ASYNC("  wall_corner_threshold_off_l : %8d\n", pm.wall_corner_threshold_off_l);
         PRINTF_ASYNC("  ---- diag_corner_threshold ---- \n");
         PRINTF_ASYNC("  diag_corner_threshold_on_r  : %8d\n", pm.diag_corner_threshold_on_r);
         PRINTF_ASYNC("  diag_corner_threshold_off_r : %8d\n", pm.diag_corner_threshold_off_r);
-        PRINTF_ASYNC("  diag_corner_threshold_on_l  : %8d\n", pm.wall_corner_threshold_on_l);
-        PRINTF_ASYNC("  diag_corner_threshold_off_l : %8d\n", pm.wall_corner_threshold_off_l);
+        PRINTF_ASYNC("  diag_corner_threshold_on_l  : %8d\n", pm.diag_corner_threshold_on_l);
+        PRINTF_ASYNC("  diag_corner_threshold_off_l : %8d\n", pm.diag_corner_threshold_off_l);
 
         PRINTF_ASYNC("  ------------------------------ \n");
         PRINTF_ASYNC("  num, turn_type_next, dir, wall_max, wall_min, buff_max,     end_yaw, corner_type\n");

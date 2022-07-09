@@ -199,7 +199,7 @@ void StraightTrajectory::update() {
     copyMsg(msg_id::VEHICLE_POSITION, &pos_msg);
     copyMsg(msg_id::NAV_STATE, &nav_msg);
 
-    _res_dist = _calcResidualDist(pos_msg.x, pos_msg.y);
+    _res_dist = _target_dist - _cumulative_dist;//_calcResidualDist(pos_msg.x, pos_msg.y);
 
     if(_turn_type == ETurnType::STRAIGHT_CENTER_EDGE && nav_msg.corner_type == ECornerType::WALL && _res_dist < 0.07f) {
         _in_detect_edge_area = true;
@@ -249,8 +249,8 @@ void StraightTrajectory::update() {
     float x_bre = 0.0f;
     float dist = _target_dist;
 
-    if(_target_dist > (0.09f + 0.045f) && _v_end > 0.3f) {
-        dist = _target_dist - 0.045f;
+    if(_target_dist > (0.09f * 2.0f + 0.045f) && _v_end > 0.3f) {
+        dist = _target_dist - 0.09f;
     }
     else {
         dist = _target_dist - 0.005f;

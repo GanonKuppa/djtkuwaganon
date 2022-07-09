@@ -15,7 +15,6 @@
 #include "vehicleAttitudeMsg.h"
 #include "vehiclePositionMsg.h"
 #include "navStateMsg.h"
-#include "wallSensorMsg.h"
 #include "pidControlValMsg.h"
 
 // Module
@@ -157,8 +156,16 @@ namespace module {
         _v_y = _v_xy_body_for_odom * sinf(yaw_pre + ctrl_msg.beta);
 
         // グローバル座標系位置算出
-        _x += _delta_t* v_x_pre;
-        _y += _delta_t* v_y_pre;
+        
+        if(std::fabs(ctrl_msg.a_xy_body) > 8.0f && ctrl_msg.v_xy_body > 1.0f){
+            float const slip_factor = pm.slip_factor;
+            _x += _delta_t * v_x_pre * slip_factor;
+            _y += _delta_t * v_y_pre * slip_factor;
+        }
+        else{
+            _x += _delta_t * v_x_pre;
+            _y += _delta_t * v_y_pre;
+        }
 
         // スリップ角算出
         _beta_expiration_time -= _delta_t;
@@ -216,14 +223,15 @@ namespace module {
 
         if(_in_read_wall_area_pre && !in_read_wall_area &&
                 ws_msg.is_ahead && nav_msg.mode == ENavMode::SEARCH &&
-                pm.on_wall_read_correction_enable
+                pm.on_wall_read_correction_enable &&
+                !ws_msg.is_right && !ws_msg.is_left
           ) {
             _aheadWallCorrectionOnWallRead(ws_msg.dist_a);
         }
 
         _in_read_wall_area_pre = in_read_wall_area;
 
-        // 探索時の右壁切れ
+        // 探索時の左壁切れ
         if(pm.corner_correction_enable && ws_msg.is_corner_l && ctrl_msg.traj_type == ETrajType::STRAIGHT && nav_msg.mode == ENavMode::SEARCH) {
             if(_corner_l_cool_down_dist > 0.035f && _v_xy_body_for_odom < 1.0f) _cornerLCorrection();
 
@@ -233,7 +241,7 @@ namespace module {
             _corner_l_cool_down_dist += _v_xy_body_for_odom * _delta_t;
         }
 
-        // 探索時の左壁切れ
+        // 探索時の右壁切れ
         if(pm.corner_correction_enable && ws_msg.is_corner_r && ctrl_msg.traj_type == ETrajType::STRAIGHT && nav_msg.mode == ENavMode::SEARCH) {
             if(_corner_r_cool_down_dist > 0.035f && _v_xy_body_for_odom < 1.0f) _cornerRCorrection();
 
@@ -251,7 +259,7 @@ namespace module {
                     traj_msg.turn_type_now == ETurnType::STRAIGHT_CENTER_EDGE &&
                     ws_msg.is_corner_r
               ) {
-                _edgeRCorrection(traj_msg, nav_msg);
+                _edgeRCorrection(traj_msg, nav_msg, ws_msg);
                 _detected_edge = true;
             }
             // 最短時の左壁切れ
@@ -259,7 +267,7 @@ namespace module {
                     traj_msg.turn_type_now == ETurnType::STRAIGHT_CENTER_EDGE &&
                     ws_msg.is_corner_l
                    ) {
-                _edgeLCorrection(traj_msg, nav_msg);
+                _edgeLCorrection(traj_msg, nav_msg, ws_msg);
                 _detected_edge = true;
             }
         }
@@ -474,7 +482,7 @@ namespace module {
         }
     }
 
-    void PositionEstimator::_edgeLCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg) {
+    void PositionEstimator::_edgeLCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg, WallSensorMsg& ws_msg) {
         ParameterManager& pm = ParameterManager::getInstance();
 
         if(pm.wall_corner_read_offset_l < 0.0f) return;
@@ -482,8 +490,11 @@ namespace module {
         float x = traj_msg.end_x_now;
         float y = traj_msg.end_y_now;
         float r = 0.0f;
+        constexpr float TAN35 = 0.70020753821f;
 
-        if(nav_msg.corner_type == ECornerType::WALL) r = pm.wall_corner_read_offset_l;
+        if(nav_msg.corner_type == ECornerType::WALL){            
+            r = pm.wall_corner_read_offset_l + TAN35 * (ws_msg.dist_l_max_in_buff - 0.045f);
+        }
         else if(nav_msg.corner_type == ECornerType::PILLAR) r = pm.wall_corner_read_offset_l;
 
         float end_yaw = traj_msg.end_yaw_now;
@@ -507,14 +518,17 @@ namespace module {
         module::LedController::getInstance().oneshotFcled(1, 0, 0, 0.005, 0.005);
     }
 
-    void PositionEstimator::_edgeRCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg) {
+    void PositionEstimator::_edgeRCorrection(TrajTripletMsg& traj_msg, NavStateMsg& nav_msg, WallSensorMsg& ws_msg) {
         ParameterManager& pm = ParameterManager::getInstance();
 
         float x = traj_msg.end_x_now;
         float y = traj_msg.end_y_now;
         float r = 0.0f;
+        constexpr float TAN35 = 0.70020753821f;
 
-        if(nav_msg.corner_type == ECornerType::WALL) r = pm.wall_corner_read_offset_r;
+        if(nav_msg.corner_type == ECornerType::WALL){
+            r = pm.wall_corner_read_offset_r + TAN35 * (ws_msg.dist_r_max_in_buff - 0.045f);
+        }
         else if(nav_msg.corner_type == ECornerType::PILLAR) r = pm.wall_corner_read_offset_r;
 
         float end_yaw = traj_msg.end_yaw_now;

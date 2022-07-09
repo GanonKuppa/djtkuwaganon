@@ -120,6 +120,7 @@ namespace module {
         float pillar_corner_read_offset_r; //72
         float pillar_corner_read_offset_l; //73
 
+        float slip_factor; //79
 
         float v_ff_coef; //80
         float v_ff_offset; //81
@@ -193,9 +194,9 @@ namespace module {
 
         float wall_corner_read_offset_r; //138
         float wall_corner_read_offset_l; //139
-        uint16_t wall_corner_threshold_on_r; //140
+        float wall_corner_peak_ratio_r; //140
         uint16_t wall_corner_threshold_off_r; //141
-        uint16_t wall_corner_threshold_on_l; //142
+        float wall_corner_peak_ratio_l; //142
         uint16_t wall_corner_threshold_off_l; //143
 
         float diag_r_corner_read_offset; //144

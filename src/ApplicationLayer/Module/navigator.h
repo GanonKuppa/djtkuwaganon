@@ -109,6 +109,8 @@ namespace module {
         bool _watchedPillar(float x, float y, EAzimuth azimuth);
         ECornerType _cornerType(float end_x, float end_y, float end_yaw, ETurnType turn_type, ETurnDir turn_dir_next);
         void _updateRunParameter();
+        float _calcAheadWallDist();
+        bool _isWallUnreliable(WallSensorMsg ws_msg);
         void _printWall();
 
         void _publish();

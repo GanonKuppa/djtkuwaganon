@@ -68,7 +68,7 @@ namespace module {
         _wall2mouse_center_dist(0.0f),
         _turn_param_set(ETurnParamSet::SEARCH),
         _read_wall_offset1(0.012f),
-        _read_wall_offset2(0.0135f),
+        _read_wall_offset2(0.015f),
         _is_pre_read_l_wall(false),
         _is_pre_read_r_wall(false),
         _pre_read_l_wall_dist(0.0f),
@@ -220,6 +220,7 @@ namespace module {
             _ws_msg_read_wall.is_left = _is_pre_read_l_wall;
             _ws_msg_read_wall.is_right = _is_pre_read_r_wall;
             EUpdateWallStatus update_wall_status = _maze.updateWall(_x_cur, _y_cur, _azimuth, _ws_msg_read_wall);
+            bool is_wall_unreliable = _isWallUnreliable(_ws_msg_read_wall);
 
             if(update_wall_status == EUpdateWallStatus::UPDATED) {
                 //PRINTF_PICKLE("UPDATE_WALL          | x_setp:%6.3f, y_setp:%6.3f | x:%6.3f, y:%6.3f | azimuth:%c\n",_x_setp/0.09f, _y_setp/0.09f, _x/0.09f, _y/0.09f, azimuth2Char(_azimuth));
@@ -263,11 +264,11 @@ namespace module {
                 if(_v_setp <= _v) { // 既知区画加速中か判定
                     _lock_guard = true;
 
-                    if(update_wall_status == EUpdateWallStatus::UPDATED){
+                    if(update_wall_status == EUpdateWallStatus::UPDATED && !is_wall_unreliable){
                         _nav_cmd_queue.push_back(ENavCommand::UPDATE_POTENTIAL_MAP);
                         _nav_cmd_queue.push_back(ENavCommand::GO_NEXT_SECTION);
                     }
-                    else if(update_wall_status == EUpdateWallStatus::REACHED){
+                    else if(update_wall_status == EUpdateWallStatus::REACHED && !is_wall_unreliable){
                         _nav_cmd_queue.push_back(ENavCommand::UPDATE_POTENTIAL_MAP);
                         _nav_cmd_queue.push_back(ENavCommand::GO_NEXT_SECTION);
                     }
@@ -483,7 +484,8 @@ namespace module {
                 }
 
                 PRINTF_PICKLE("UPDATE_WALL          | x_setp:%6.3f, y_setp:%6.3f | x:%6.3f, y:%6.3f | azimuth:%c\n",_x_setp/0.09f, _y_setp/0.09f, _x/0.09f, _y/0.09f, azimuth2Char(_azimuth));
-                PRINTF_PICKLE("  dist: %.3f, %.3f, %.3f, %.3f\n", _ws_msg_read_wall.dist_al, _ws_msg_read_wall.dist_l, _ws_msg_read_wall.dist_r, _ws_msg_read_wall.dist_ar);
+                PRINTF_PICKLE("  dist_wall  : %.3f, %.3f, %.3f, %.3f\n", _ws_msg_read_wall.dist_al, _ws_msg_read_wall.dist_l, _ws_msg_read_wall.dist_r, _ws_msg_read_wall.dist_ar);               
+                PRINTF_PICKLE("  ahead_dist : %.3f\n", _calcAheadWallDist());
                 PRINTF_PICKLE("UPDATE_POTENTIAL_MAP | updated_section_queue size %d\n",_updated_section_queue.size());
             }
             else if(cmd == ENavCommand::SAVE_MAZE) {
@@ -935,6 +937,22 @@ namespace module {
             _turn_param_set = ETurnParamSet::SAFE;
             _v_max = 0.7f;
         }
+    }
+
+    float Navigator::_calcAheadWallDist() {
+        if(_azimuth == EAzimuth::E) return 0.09f - (_x - _x_cur * 0.09f);
+        else if(_azimuth == EAzimuth::N) return 0.09f - (_y - _y_cur * 0.09f);
+        else if(_azimuth == EAzimuth::W) return _x - _x_cur * 0.09f;
+        else if(_azimuth == EAzimuth::S) return _y - _y_cur * 0.09f;
+        else return 0.0f;
+    }
+
+    bool Navigator::_isWallUnreliable(WallSensorMsg ws_msg) {
+        ParameterManager& pm = ParameterManager::getInstance();
+        return std::fabs(pm.wall_al_thr - ws_msg.dist_al) < 0.015f||
+               std::fabs(pm.wall_l_thr - ws_msg.dist_l) < 0.01f ||
+               std::fabs(pm.wall_r_thr - ws_msg.dist_r) < 0.01f ||
+               std::fabs(pm.wall_ar_thr - ws_msg.dist_ar) < 0.015f; 
     }
 
     void Navigator::_printWall() {

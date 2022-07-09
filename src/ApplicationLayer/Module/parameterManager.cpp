@@ -94,7 +94,7 @@ namespace module {
         ;//76
         ;//77
         ;//78
-        ;//79
+        registration<float>(79, slip_factor, "slip_factor", 1.0f); //79
         registration<float>(80, v_ff_coef, "v_ff_coef", 1.0f); //80
         registration<float>(81, v_ff_offset, "v_ff_offset", 0.5f); //81
         registration<float>(82, a_ff_coef, "a_ff_coef", 1.0f); //82
@@ -155,9 +155,9 @@ namespace module {
         registration<float>(137, wall_diag_i_saturation, "wall_diag_i_saturation", 0.0f); //137
         registration<float>(138, wall_corner_read_offset_r, "wall_corner_read_offset_r", 0.0f); //138
         registration<float>(139, wall_corner_read_offset_l, "wall_corner_read_offset_l", 0.0f); //139
-        registration<uint16_t>(140, wall_corner_threshold_on_r, "wall_corner_threshold_on_r", 0); //140
+        registration<float>(140, wall_corner_peak_ratio_r, "wall_corner_peak_ratio_r", 1.5f); //140
         registration<uint16_t>(141, wall_corner_threshold_off_r, "wall_corner_threshold_off_r", 0); //141
-        registration<uint16_t>(142, wall_corner_threshold_on_l, "wall_corner_threshold_on_l", 0); //142
+        registration<float>(142, wall_corner_peak_ratio_l, "wall_corner_peak_ratio_l", 1.5f); //142
         registration<uint16_t>(143, wall_corner_threshold_off_l, "wall_corner_threshold_off_l", 0); //143
         registration<float>(144, diag_r_corner_read_offset, "diag_r_corner_read_offset", 0.0f); //144
         registration<float>(145, diag_l_corner_read_offset, "diag_l_corner_read_offset", 0.0f); //145

@@ -373,6 +373,10 @@ namespace module {
         msg.dist_l = _dist_l;
         msg.dist_r = _dist_r;
 
+        msg.dist_l_max_in_buff = _distL(_leftMax());
+        msg.dist_r_max_in_buff = _distR(_rightMax());
+
+
         msg.is_ahead_l = _is_ahead_l;
         msg.is_ahead_r = _is_ahead_r;
         msg.is_ahead = _is_ahead;
@@ -424,7 +428,7 @@ namespace module {
 
     bool WallSensor::_isCornerL() {
         ParameterManager& pm = ParameterManager::getInstance();
-        int16_t th_on = pm.wall_corner_threshold_on_l;
+        float th_ratio = pm.wall_corner_peak_ratio_l;
         int16_t th_off = pm.wall_corner_threshold_off_l;
         int16_t current = _left_q.at(0);
 #if 0
@@ -441,12 +445,12 @@ namespace module {
             if(max_val < _left_q.at(i)) max_val = _left_q.at(i);
         }
         float ratio = (float)max_val / (float)current;
-        return (current < th_off && ratio > 1.7f );
+        return (current < th_off && ratio > th_ratio );
     }
 
     bool WallSensor::_isCornerR() {
         ParameterManager& pm = ParameterManager::getInstance();
-        int16_t th_on = pm.wall_corner_threshold_on_r;
+        float th_ratio = pm.wall_corner_peak_ratio_r;
         int16_t th_off = pm.wall_corner_threshold_off_r;
         int16_t current = _right_q.at(0);
 #if 0
@@ -463,7 +467,7 @@ namespace module {
             if(max_val < _right_q.at(i)) max_val = _right_q.at(i);
         }
         float ratio = (float)max_val / (float)current;
-        return (current < th_off && ratio > 1.7f );
+        return (current < th_off && ratio > th_ratio );
     }
 
     bool WallSensor::_isDiagCornerL() {
