@@ -15,6 +15,7 @@ namespace module {
         void debug();
         void eval();
         void printCycleTime();
+        void printEndless();
       private:
         bool _enable;
         int16_t _ahead_l_on;

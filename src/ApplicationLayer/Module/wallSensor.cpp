@@ -671,6 +671,17 @@ namespace module {
         }
     }
 
+    void WallSensor::printEndless() {
+        while(1){
+            PRINTF_ASYNC("  =============================\n");
+            PRINTF_ASYNC("  ON     : al, l, r, ar: %d, %d, %d, %d\n", _ahead_l_on, _left_on,_right_on, _ahead_r_on);
+            PRINTF_ASYNC("  OFF    : al, l, r, ar: %d, %d, %d, %d\n", _ahead_l_off, _left_off, _right_off, _ahead_r_off);
+            PRINTF_ASYNC("  MOD    : al, l, r, ar: %d, %d, %d, %d\n", _ahead_l_q.at(0), _left_q.at(0), _right_q.at(0), _ahead_r_q.at(0));
+            PRINTF_ASYNC("  dist   : al, l, r, ar: %f, %f, %f, %f\n", _dist_al, _dist_l, _dist_r, _dist_ar);
+            hal::waitmsec(200);
+        }
+    }
+
     void WallSensor::printCycleTime() {
         PRINTF_ASYNC("    %s\n",getModuleName().c_str());
         PRINTF_ASYNC("      %6.2f[us], %6.2f[us], %6.2f[us], %6.2f[us], %6.2f[us], %6.2f[us]\n", _cycle_time_us[0], _cycle_time_us[1], _cycle_time_us[2], _cycle_time_us[3], _cycle_time_every_us, _cycle_time_in_main_loop_us);
@@ -684,6 +695,7 @@ namespace module {
         if (ntlibc_strcmp(argv[1], "help") == 0) {
             PRINTF_ASYNC("  status :\r\n");
             PRINTF_ASYNC("  eval   :\r\n");
+            PRINTF_ASYNC("  print  :\r\n");
             return 0;
         }
 
@@ -696,6 +708,12 @@ namespace module {
             WallSensor::getInstance().eval();
             return 0;
         }
+
+        if (ntlibc_strcmp(argv[1], "print") == 0) {
+            WallSensor::getInstance().printEndless();
+            return 0;
+        }
+
 
         PRINTF_ASYNC("  Unknown sub command\r\n");
         return -1;

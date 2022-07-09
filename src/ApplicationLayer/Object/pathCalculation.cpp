@@ -231,33 +231,6 @@ void makeFastestDiagonalPath(uint32_t trial_times, ETurnParamSet tp, uint16_t go
 
 };
 
-
-void translatePathSpin(std::vector<Path>& path_vec) {
-    compress_straight(path_vec);
-}
-
-
-void translatePath90Deg(std::vector<Path>& path_vec) {
-    path_vec.insert(path_vec.begin(), Path(ETurnType::STRAIGHT, 1, ETurnDir::NO_TURN));
-
-    path_vec.push_back(Path(ETurnType::STRAIGHT, 1, ETurnDir::NO_TURN)); // パスの最後に直線がないと変換がうまくできないのでダミーで入れた
-    path_vec.pop_back(); // ダミーを消去
-
-    compress_straight(path_vec, 1);
-}
-
-
-void translatePathLong(std::vector<Path>& path_vec) {
-    path_vec.insert(path_vec.begin(), Path(ETurnType::STRAIGHT, 1, ETurnDir::NO_TURN));
-
-    path_vec.push_back(Path(ETurnType::STRAIGHT, 1, ETurnDir::NO_TURN)); // パスの最後に直線がないと変換がうまくできないのでダミーで入れた
-    compress_l_90(path_vec);
-    compress_180(path_vec);
-    path_vec.pop_back(); // ダミーを消去
-
-    compress_straight(path_vec, 1);
-}
-
 void translatePathDiagonal(std::vector<Path>& path_vec) {
     path_vec.insert(path_vec.begin(), Path(ETurnType::STRAIGHT, 1, ETurnDir::NO_TURN));
 
@@ -274,7 +247,6 @@ void translatePathDiagonal(std::vector<Path>& path_vec) {
     compress_straight(path_vec, 1);
     compress_d_straight(path_vec);
 }
-
 
 void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
     TurnParameter turn_p = module::TrajectoryInitializer::getInstance().getTurnParameter(tp);
@@ -303,14 +275,14 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
             else {
                 x = float(path_vec[i].block_num) * 0.045f;
             }
-
+            // pre_turn_fol_dist
             if (i-1 >= 0 && path_vec[i-1].isTurnCurve()) {
                 pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(tp,path_vec[i-1].turn_type);
             }
             else {
                 pre_turn_fol_dist = 0.0f;
             }
-
+            // next_turn_pre_dist
             if(i+2 == (uint16_t)path_vec.size() && path_vec[i+1].isTurnCurve()) {
                 next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(ETurnParamSet::SAFE,path_vec[i+1].turn_type);
             }
