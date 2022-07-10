@@ -277,7 +277,13 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
             }
             // pre_turn_fol_dist
             if (i-1 >= 0 && path_vec[i-1].isTurnCurve()) {
-                pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(tp,path_vec[i-1].turn_type);
+//★
+                if( i-2 >= 0 && !path_vec[i-2].isTurnCurve()){
+                    pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(ETurnParamSet( (uint8_t)tp + 1), path_vec[i-1].turn_type);
+                }
+                else{
+                    pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(tp,path_vec[i-1].turn_type);
+                }
             }
             else {
                 pre_turn_fol_dist = 0.0f;
@@ -287,7 +293,14 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
                 next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(ETurnParamSet::SAFE,path_vec[i+1].turn_type);
             }
             else if (i+1 != (uint16_t)path_vec.size() && path_vec[i+1].isTurnCurve()) {
-                next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(tp,path_vec[i+1].turn_type);
+//★
+                if( i+2 <= (uint16_t)path_vec.size()-1 && !path_vec[i+2].isTurnCurve()){
+                    next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(ETurnParamSet( (uint8_t)tp + 1), path_vec[i+1].turn_type);
+                }
+                else {
+                    next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(tp,path_vec[i+1].turn_type);
+                }
+
             }
             else {
                 next_turn_pre_dist = 0.0f;
@@ -305,7 +318,14 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
                 v_pre = 0.0f;
             }
             else {
-                v_pre = turn_p.getV(path_vec[i-1].turn_type);
+//★
+                if( i-2 >= 0 && !path_vec[i-2].isTurnCurve()){
+                    //v_pre = turn_p.getV(path_vec[i-1].turn_type);
+                    v_pre = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet( (uint8_t)tp + 1), path_vec[i-1].turn_type);
+                }
+                else{
+                    v_pre = turn_p.getV(path_vec[i-1].turn_type);
+                }                
             }
 
             // v_fol
@@ -316,7 +336,13 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
                 v_fol = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet::SAFE, path_vec[i+1].turn_type);
             }
             else {
-                v_fol = turn_p.getV(path_vec[i+1].turn_type);
+//★
+                if( i+2 <= (uint16_t)path_vec.size()-1 && !path_vec[i+2].isTurnCurve()){
+                    v_fol = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet( (uint8_t)tp + 1), path_vec[i+1].turn_type);
+                }
+                else {
+                    v_fol = turn_p.getV(path_vec[i+1].turn_type);
+                }
             }
 
             if(i == 0 && path_vec[i].block_num == 1) {
@@ -340,19 +366,33 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
         else if(path_vec[i].turn_type == ETurnType::DIAGONAL) {
             // x
             x = float(path_vec[i].block_num) * 0.045f * 1.4142356f;
-
+            
+            // pre_turn_fol_dist
             if (i-1 >= 0 && path_vec[i-1].isTurnCurve()) {
-                pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(tp,path_vec[i-1].turn_type);
+//★
+                if( i-2 >= 0 && !path_vec[i-2].isTurnCurve()){
+                    pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(ETurnParamSet( (uint8_t)tp + 1), path_vec[i-1].turn_type);
+                }
+                else{
+                    pre_turn_fol_dist = module::TrajectoryInitializer::getInstance().getFolDist(tp,path_vec[i-1].turn_type);
+                }
             }
             else {
                 pre_turn_fol_dist = 0.0f;
             }
 
+            // next_turn_pre_dist
             if(i+2 == (uint16_t)path_vec.size() && path_vec[i+1].isTurnCurve()) {
                 next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(ETurnParamSet::SAFE,path_vec[i+1].turn_type);
             }
             else if (i+1 != (uint16_t)path_vec.size() && path_vec[i+1].isTurnCurve()) {
-                next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(tp,path_vec[i+1].turn_type);
+//★
+                if( i+2 <= (uint16_t)path_vec.size()-1 && !path_vec[i+2].isTurnCurve()){
+                    next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(ETurnParamSet( (uint8_t)tp + 1), path_vec[i+1].turn_type);
+                }
+                else {
+                    next_turn_pre_dist = module::TrajectoryInitializer::getInstance().getPreDist(tp,path_vec[i+1].turn_type);
+                }
             }
             else {
                 next_turn_pre_dist = 0.0f;
@@ -365,7 +405,13 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
             // v_max
             v_max = turn_p.getV(ETurnType::DIAGONAL);
             // v_pre
-            v_pre = turn_p.getV(path_vec[i-1].turn_type);
+//★
+            if( i-2 >= 0 && !path_vec[i-2].isTurnCurve()){                
+                v_pre = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet( (uint8_t)tp + 1), path_vec[i-1].turn_type);
+            }
+            else{
+                v_pre = turn_p.getV(path_vec[i-1].turn_type);
+            }
 
             // v_fol
             if (i + 1 == (uint16_t)path_vec.size()) {
@@ -375,7 +421,13 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
                 v_fol = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet::SAFE, path_vec[i+1].turn_type);
             }
             else {
-                v_fol = turn_p.getV(path_vec[i+1].turn_type);
+//★
+                if( i+2 <= (uint16_t)path_vec.size()-1 && !path_vec[i+2].isTurnCurve()){
+                    v_fol = module::TrajectoryInitializer::getInstance().getV(ETurnParamSet( (uint8_t)tp + 1), path_vec[i+1].turn_type);
+                }
+                else {
+                    v_fol = turn_p.getV(path_vec[i+1].turn_type);
+                }
             }
 
             if(pm.d_turn_pre_edge_correction_enable  && v_fol > 0.0f) {
@@ -489,7 +541,13 @@ void HF_playPath(ETurnParamSet tp, std::vector<Path>& path_vec) {
                 CurveFactory::push(ETurnParamSet::SAFE, path_vec[i].turn_type, dir);
             }
             else {
-                CurveFactory::push(tp, path_vec[i].turn_type, dir);
+//★
+                if(i > 0 &&  i+1 < (uint16_t)path_vec.size() && !path_vec[i-1].isTurnCurve() && !path_vec[i+1].isTurnCurve()){
+                    CurveFactory::push( ETurnParamSet((uint8_t)tp + 1), path_vec[i].turn_type, dir);
+                }
+                else{
+                    CurveFactory::push(tp, path_vec[i].turn_type, dir);
+                }
             }
 
             if(path_vec[i].isStraightEnd() && i + 1 == (uint16_t)path_vec.size()) {

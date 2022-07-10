@@ -55,7 +55,8 @@ enum class ETurnParamSet : uint8_t {
     FAST1,
     FAST2,
     FAST3,
-    FAST4
+    FAST4,
+    FAST5
 };
 
 inline std::string turnDir2Str(ETurnDir td) {
@@ -189,6 +190,9 @@ inline std::string turnParamSet2Str(ETurnParamSet tp) {
         case ETurnParamSet::FAST4:
             return std::string("FAST4");
 
+        case ETurnParamSet::FAST5:
+            return std::string("FAST5");
+        
         default:
             return std::string("");
     }

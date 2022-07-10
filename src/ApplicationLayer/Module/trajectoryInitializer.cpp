@@ -124,6 +124,20 @@ namespace module {
                 pm.shortest_4_a_diag
                                               );
 
+        _turnParamSet[ETurnParamSet::FAST5] = TurnParameter(
+                pm.shortest_4_v,
+                pm.shortest_4_v_d,
+                pm.shortest_4_v_90,
+                pm.shortest_4_v_l90,
+                pm.shortest_4_v_180,
+                pm.shortest_4_v_d90,
+                pm.shortest_4_v_45,
+                pm.shortest_4_v_135,
+                pm.shortest_4_a,
+                pm.shortest_4_a_diag
+                                              );
+
+
         float cp = pm.cp_coef;
 
         for (std::pair<ETurnParamSet, TurnParameter> key_val : _turnParamSet) {
@@ -261,7 +275,7 @@ namespace module {
 
     void TrajectoryInitializer::debugPreCalcs() {
         ETurnType turnList[8] = {ETurnType::TURN_90, ETurnType::TURN_L_90, ETurnType::TURN_180, ETurnType::TURN_S2D_45, ETurnType::TURN_S2D_135, ETurnType::TURN_D2S_45, ETurnType::TURN_D2S_135, ETurnType::TURN_D_90};
-        ETurnParamSet paramSetList[7] = {ETurnParamSet::SEARCH, ETurnParamSet::SAFE, ETurnParamSet::FAST0, ETurnParamSet::FAST1, ETurnParamSet::FAST2, ETurnParamSet::FAST3, ETurnParamSet::FAST4};
+        ETurnParamSet paramSetList[8] = {ETurnParamSet::SEARCH, ETurnParamSet::SAFE, ETurnParamSet::FAST0, ETurnParamSet::FAST1, ETurnParamSet::FAST2, ETurnParamSet::FAST3, ETurnParamSet::FAST4, ETurnParamSet::FAST5};
         PRINTF_ASYNC("--- turnPreCalcs --- \n");
 
         for(auto turn : turnList) {
