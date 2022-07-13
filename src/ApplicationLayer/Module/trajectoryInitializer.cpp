@@ -125,16 +125,16 @@ namespace module {
                                               );
 
         _turnParamSet[ETurnParamSet::FAST5] = TurnParameter(
-                pm.shortest_4_v,
-                pm.shortest_4_v_d,
-                pm.shortest_4_v_90,
-                pm.shortest_4_v_l90,
-                pm.shortest_4_v_180,
-                pm.shortest_4_v_d90,
-                pm.shortest_4_v_45,
-                pm.shortest_4_v_135,
-                pm.shortest_4_a,
-                pm.shortest_4_a_diag
+                pm.shortest_5_v,
+                pm.shortest_5_v_d,
+                pm.shortest_5_v_90,
+                pm.shortest_5_v_l90,
+                pm.shortest_5_v_180,
+                pm.shortest_5_v_d90,
+                pm.shortest_5_v_45,
+                pm.shortest_5_v_135,
+                pm.shortest_5_a,
+                pm.shortest_5_a_diag
                                               );
 
 

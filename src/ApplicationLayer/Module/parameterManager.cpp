@@ -306,6 +306,27 @@ namespace module {
         registration<float>(288, shortest_4_a, "shortest_4_a", 17.0f); //288
         registration<float>(289, shortest_4_a_diag, "shortest_4_a_diag", 12.0f); //289
         registration<float>(290, shortest_4_suction_duty, "shortest_4_suction_duty", 0.0f); //290
+        ;//291
+        ;//292
+        ;//293
+        ;//294
+        ;//295
+        ;//296
+        ;//297
+        ;//298
+        ;//299
+        registration<float>(300, shortest_5_v, "shortest_5_v", 5.0f); //300
+        registration<float>(301, shortest_5_v_d, "shortest_5_v_d", 4.0f); //301
+        registration<float>(302, shortest_5_v_90, "shortest_5_v_90", 0.4f); //302
+        registration<float>(303, shortest_5_v_l90, "shortest_5_v_l90", 1.55f); //303
+        registration<float>(304, shortest_5_v_180, "shortest_5_v_180", 1.33f); //304
+        registration<float>(305, shortest_5_v_d90, "shortest_5_v_d90", 1.3f); //305
+        registration<float>(306, shortest_5_v_45, "shortest_5_v_45", 1.36f); //306
+        registration<float>(307, shortest_5_v_135, "shortest_5_v_135", 1.32f); //307
+        registration<float>(308, shortest_5_a, "shortest_5_a", 17.0f); //308
+        registration<float>(309, shortest_5_a_diag, "shortest_5_a_diag", 12.0f); //309
+        registration<float>(310, shortest_5_suction_duty, "shortest_5_suction_duty", 0.0f); //310
+
     }
 
 //プログラム中の変数にデータフラッシュの保存域を割り当て

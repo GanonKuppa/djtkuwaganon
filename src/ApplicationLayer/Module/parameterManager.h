@@ -351,6 +351,28 @@ namespace module {
         float shortest_4_a; //288
         float shortest_4_a_diag; //289
         float shortest_4_suction_duty; //290
+        ; //291
+        ; //292
+        ; //293
+        ; //294
+        ; //295
+        ; //296
+        ; //297
+        ; //298
+        ; //299
+        float shortest_5_v; //300
+        float shortest_5_v_d; //301
+        float shortest_5_v_90; //302
+        float shortest_5_v_l90; //303
+        float shortest_5_v_180; //304
+        float shortest_5_v_d90; //305
+        float shortest_5_v_45; //306
+        float shortest_5_v_135; //307
+        float shortest_5_a; //308
+        float shortest_5_a_diag; //309
+        float shortest_5_suction_duty; //310
+
+
 
 
         //----管理下においた変数たち-----
