@@ -23,7 +23,7 @@ namespace hal {
 #ifndef SILS
 
     #ifdef DJTKUWAGANON_ACT1
-    peripheral_driver::initPC3GPTA1();
+    peripheral_driver::initPC2GPTA2();    
     #endif
 
     #ifdef DJTKUWAGANON_ACT2
@@ -37,7 +37,7 @@ namespace hal {
 #ifndef SILS
 
     #ifdef DJTKUWAGANON_ACT1
-    peripheral_driver::initPC2GPTA2();
+    peripheral_driver::initPC3GPTA1();
     #endif
 
     #ifdef DJTKUWAGANON_ACT2
@@ -109,8 +109,8 @@ namespace hal {
     void setDutyPWM1(float duty) {
 #ifndef SILS
 
-    #ifdef DJTKUWAGANON_ACT1
-    peripheral_driver::setDutyPC3GPTA1(duty);
+    #ifdef DJTKUWAGANON_ACT1    
+    peripheral_driver::setDutyPC2GPTA2(duty);
     #endif
 
     #ifdef DJTKUWAGANON_ACT2
@@ -124,7 +124,7 @@ namespace hal {
 #ifndef SILS
 
     #ifdef DJTKUWAGANON_ACT1
-    peripheral_driver::initPC2GPTA2(duty);
+    peripheral_driver::setDutyPC3GPTA1(duty);
     #endif
 
     #ifdef DJTKUWAGANON_ACT2
@@ -216,11 +216,11 @@ namespace hal {
 #ifndef SILS
 
     #ifdef DJTKUWAGANON_ACT1
-    return peripheral_driver::getDutyPC2GPTA1();
+    return peripheral_driver::getDutyPC3GPTA1();
     #endif
 
     #ifdef DJTKUWAGANON_ACT2
-    return peripheral_driver::getDutyPC3GPTA1();
+    return peripheral_driver::getDutyPC2GPTA2();
     #endif
     return 0.0f;
 #else

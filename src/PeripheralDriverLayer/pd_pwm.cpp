@@ -426,7 +426,7 @@ namespace peripheral_driver {
     float getDutyPC2GPTA2(){return dutyPC2GPTA2;};
     float getDutyPC1MTU3A(){return dutyPC1MTU3A;};
     float getDutyPC0MTU3C(){return dutyPC0MTU3C;};
-    float getDutyPA0MTU7A(){return dutyPA2MTU7A;};
+    float getDutyPA2MTU7A(){return dutyPA2MTU7A;};
     float getDutyP23GPTA0(){return dutyP23GPTA0;};
     float getDutyP24MTU4A(){return dutyP24MTU4A;};
 }

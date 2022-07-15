@@ -61,7 +61,7 @@ namespace module {
         _yaw_setp(90.0f * DEG2RAD),
         _turn_type(ETurnType::NONE),
         _v(0.25f),
-        _v_max(1.0f),
+        _v_max(0.8f),
         _a(4.0f),
         _yawrate_max(1000.0f * DEG2RAD),
         _yawacc(1000.0f * DEG2RAD),
@@ -372,8 +372,8 @@ namespace module {
                         }
                     }
 
-                    if(block_count == 1) StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.09f, _v);
-                    else StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.09f * block_count, _v, _v_max, _v, _a, _a);
+                    if(block_count == 1 || true) StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.09f, _v);
+                    else StraightFactory::push(ETurnType::STRAIGHT_CENTER, 0.09f * block_count, _v, _v, _v, _a, _a); // _v_max -> _v
                 }
                 else if (std::abs(rot_times) == 4) {
                     _maze.writeMazeData2Flash();
@@ -926,7 +926,7 @@ namespace module {
             _yawrate_max = pm.spin_yawrate_max * DEG2RAD;
             _yawacc = pm.spin_yawacc * DEG2RAD;
             _turn_param_set = ETurnParamSet::SEARCH;
-            _v_max = 1.2f;
+            _v_max = 0.8f;
         }
         else {
             module::Suction::getInstance().setDuty(0.0f);
