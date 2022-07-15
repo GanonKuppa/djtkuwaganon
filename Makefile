@@ -39,6 +39,27 @@ else
 	cmake --build build
 endif
 
+.PHONY: build_act1
+build_act1: ## djtkuwaganon_act1用motファイル生成	
+ifeq ($(OS),Windows_NT)
+	cmake -S src -B build -G Ninja -DCMAKE_MAKE_PROGRAM="C:/ninja-win/ninja" -DACT1=ON
+	cmake --build build
+else
+	cmake -S src -B build -G Ninja -DACT1=ON
+	cmake --build build
+endif
+
+.PHONY: build_act2
+build_act2: ## djtkuwaganon_act2用motファイル生成	
+ifeq ($(OS),Windows_NT)
+	cmake -S src -B build -G Ninja -DCMAKE_MAKE_PROGRAM="C:/ninja-win/ninja" -DACT2=ON
+	cmake --build build
+else
+	cmake -S src -B build -G Ninja -DACT2=ON
+	cmake --build build
+endif
+
+
 .PHONY: clean
 clean: ## buildディレクトリを消去
 ifeq ($(OS),Windows_NT)

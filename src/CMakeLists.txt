@@ -59,6 +59,14 @@ enable_language(ASM)
 
 # define
 add_definitions(-DCPPAPP)
+IF(ACT1)
+    add_definitions(-DDJTKUWAGANON_ACT1)
+ENDIF(ACT1)
+
+IF(ACT2)
+    add_definitions(-DDJTKUWAGANON_ACT2)
+ENDIF(ACT2)
+
 
 # includes
 set(GENERATE_DIR_H ${PROJECT_SOURCE_DIR}/generate)

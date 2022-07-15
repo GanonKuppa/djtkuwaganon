@@ -1,61 +1,55 @@
 #include <stdint.h>
 #include <iodefine.h>
 
-/*        djtkuwaganon   trrkuwaganon2  trrkuwganon1
-BATT_AD   AN113          PD1 AN109      AN001
-SEN_AD_RA AN108          PD0 AN108      AN000
-SEN_AD_R  AN110          AD2 AN110      AN005
-SEN_AD_L  AN111          PD3 AN111      AN108
-SEN_AD_LA AN101          PE3 AN101      AN101
+/*        djtkuwaganon act2 djtkuwaganon act1  trrkuwaganon2  trrkuwganon1
+BATT_AD      AN101             AN113               PD1 AN109      AN001
+SEN_AD_RA    AN100             AN108               PD0 AN108      AN000
+SEN_AD_R     AN112             AN110               AD2 AN110      AN005
+SEN_AD_L     AN108             AN111               PD3 AN111      AN108
+SEN_AD_LA    AN003             AN101               PE3 AN101      AN101
 */
 
 namespace peripheral_driver {
-    void initAD() {
-        //SYSTEM.PRCR.WORD = 0xA502;
-        //MSTP(S12AD) = 0;
-        //SYSTEM.PRCR.WORD = 0xA500;
+    void initAD_AN000(){
+        PORT4.PDR.BIT.B0 = 0;
+        PORT4.PMR.BIT.B0 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.P40PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        SYSTEM.PRCR.WORD = 0xA502;
-        MSTP(S12AD1) = 0;
-        SYSTEM.PRCR.WORD = 0xA500;
+    void initAD_AN001(){
+        PORT4.PDR.BIT.B1 = 0;
+        PORT4.PMR.BIT.B1 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.P41PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
+    void initAD_AN002(){
+        PORT4.PDR.BIT.B2 = 0;
+        PORT4.PMR.BIT.B2 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.P42PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //AN000
-        //PORT4.PDR.BIT.B0 = 0;
-        //PORT4.PMR.BIT.B0 = 0;
-        //MPC.PWPR.BIT.B0WI = 0;
-        //MPC.PWPR.BIT.PFSWE = 1;
-        //MPC.P40PFS.BIT.ASEL = 1;
-        //MPC.PWPR.BIT.PFSWE = 0;
-        //MPC.PWPR.BIT.B0WI = 1;
+    void initAD_AN003(){
+        PORT4.PDR.BIT.B3 = 0;
+        PORT4.PMR.BIT.B3 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.P43PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //AN001
-        //PORT4.PDR.BIT.B1 = 0;
-        //PORT4.PMR.BIT.B1 = 0;
-        //MPC.PWPR.BIT.B0WI = 0;
-        //MPC.PWPR.BIT.PFSWE = 1;
-        //MPC.P41PFS.BIT.ASEL = 1;
-        //MPC.PWPR.BIT.PFSWE = 0;
-        //MPC.PWPR.BIT.B0WI = 1;
-
-        //AN002
-        //PORT4.PDR.BIT.B2 = 0;
-        //PORT4.PMR.BIT.B2 = 0;
-        //MPC.PWPR.BIT.B0WI = 0;
-        //MPC.PWPR.BIT.PFSWE = 1;
-        //MPC.P42PFS.BIT.ASEL = 1;
-        //MPC.PWPR.BIT.PFSWE = 0;
-        //MPC.PWPR.BIT.B0WI = 1;
-
-        //AN003
-        //PORT4.PDR.BIT.B3 = 0;
-        //PORT4.PMR.BIT.B3 = 0;
-        //MPC.PWPR.BIT.B0WI = 0;
-        //MPC.PWPR.BIT.PFSWE = 1;
-        //MPC.P43PFS.BIT.ASEL = 1;
-        //MPC.PWPR.BIT.PFSWE = 0;
-        //MPC.PWPR.BIT.B0WI = 1;
-
-        //AN004
+    void initAD_AN004(){
         //PORT4.PDR.BIT.B4 = 0;
         //PORT4.PMR.BIT.B4 = 0;
         //MPC.PWPR.BIT.B0WI = 0;
@@ -63,8 +57,9 @@ namespace peripheral_driver {
         //MPC.P44PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //AN005
+    void initAD_AN005(){        
         //PORT4.PDR.BIT.B5 = 0;
         //PORT4.PMR.BIT.B5 = 0;
         //MPC.PWPR.BIT.B0WI = 0;
@@ -72,7 +67,9 @@ namespace peripheral_driver {
         //MPC.P45PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN006(){
         //AN006
         //PORT4.PDR.BIT.B6 = 0;
         //PORT4.PMR.BIT.B6 = 0;
@@ -81,8 +78,9 @@ namespace peripheral_driver {
         //MPC.P46PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //AN007
+    void initAD_AN007(){
         //PORT4.PDR.BIT.B7 = 0;
         //PORT4.PMR.BIT.B7 = 0;
         //MPC.PWPR.BIT.B0WI = 0;
@@ -90,16 +88,19 @@ namespace peripheral_driver {
         //MPC.P47PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //AN100
-        //PORTE.PDR.BIT.B2 = 0;
-        //PORTE.PMR.BIT.B2 = 0;
-        //MPC.PWPR.BIT.B0WI = 0;
-        //MPC.PWPR.BIT.PFSWE = 1;
-        //MPC.PE2PFS.BIT.ASEL = 1;
-        //MPC.PWPR.BIT.PFSWE = 0;
-        //MPC.PWPR.BIT.B0WI = 1;
+    void initAD_AN100(){
+        PORTE.PDR.BIT.B2 = 0;
+        PORTE.PMR.BIT.B2 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.PE2PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN101(){
         //AN101 SEN_AD_LA
         PORTE.PDR.BIT.B3 = 0;
         PORTE.PMR.BIT.B3 = 0;
@@ -108,7 +109,9 @@ namespace peripheral_driver {
         MPC.PE3PFS.BIT.ASEL = 1;
         MPC.PWPR.BIT.PFSWE = 0;
         MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN102(){
         //AN102
         //PORTE.PDR.BIT.B4 = 0;
         //PORTE.PMR.BIT.B4 = 0;
@@ -117,7 +120,17 @@ namespace peripheral_driver {
         //MPC.PE4PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN103(){
+
+    }
+
+    void initAD_AN104(){
+
+    }
+
+    void initAD_AN105(){
         //AN105
         //PORTE.PDR.BIT.B7 = 0;
         //PORTE.PMR.BIT.B7 = 0;
@@ -126,7 +139,17 @@ namespace peripheral_driver {
         //MPC.PE7PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN106(){
+
+    }
+
+    void initAD_AN107(){
+
+    }
+
+    void initAD_AN108(){
         //AN108 SEN_AD_RA
         PORTD.PDR.BIT.B0 = 0;
         PORTD.PMR.BIT.B0 = 0;
@@ -135,7 +158,9 @@ namespace peripheral_driver {
         MPC.PD0PFS.BIT.ASEL = 1;
         MPC.PWPR.BIT.PFSWE = 0;
         MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN109(){
         //AN109
         //PORTD.PDR.BIT.B1 = 0;
         //PORTD.PMR.BIT.B1 = 0;
@@ -144,7 +169,9 @@ namespace peripheral_driver {
         //MPC.PD1PFS.BIT.ASEL = 1;
         //MPC.PWPR.BIT.PFSWE = 0;
         //MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN110(){
         //AN110 SEN_AD_R
         PORTD.PDR.BIT.B2 = 0;
         PORTD.PMR.BIT.B2 = 0;
@@ -153,7 +180,9 @@ namespace peripheral_driver {
         MPC.PD2PFS.BIT.ASEL = 1;
         MPC.PWPR.BIT.PFSWE = 0;
         MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN111(){
         //AN111 SEN_AD_L
         PORTD.PDR.BIT.B3 = 0;
         PORTD.PMR.BIT.B3 = 0;
@@ -162,7 +191,19 @@ namespace peripheral_driver {
         MPC.PD3PFS.BIT.ASEL = 1;
         MPC.PWPR.BIT.PFSWE = 0;
         MPC.PWPR.BIT.B0WI = 1;
+    }
 
+    void initAD_AN112(){
+        PORTD.PDR.BIT.B4 = 0;
+        PORTD.PMR.BIT.B4 = 0;
+        MPC.PWPR.BIT.B0WI = 0;
+        MPC.PWPR.BIT.PFSWE = 1;
+        MPC.PD4PFS.BIT.ASEL = 1;
+        MPC.PWPR.BIT.PFSWE = 0;
+        MPC.PWPR.BIT.B0WI = 1;
+    }
+
+    void initAD_AN113(){
         //AN113 BATT_AD
         PORTD.PDR.BIT.B5 = 0;
         PORTD.PMR.BIT.B5 = 0;
@@ -171,14 +212,25 @@ namespace peripheral_driver {
         MPC.PD5PFS.BIT.ASEL = 1;
         MPC.PWPR.BIT.PFSWE = 0;
         MPC.PWPR.BIT.B0WI = 1;
+    }
 
-        //S12AD.ADCSR.BIT.EXTRG = 1;
-        //S12AD.ADCSR.BIT.TRGE = 1;
-        //S12AD.ADCSR.BIT.ADCS = 0;
+    void initS12AD0(){
+        SYSTEM.PRCR.WORD = 0xA502;
+        MSTP(S12AD) = 0;
+        SYSTEM.PRCR.WORD = 0xA500;
+        
+        S12AD.ADCSR.BIT.EXTRG = 1;
+        S12AD.ADCSR.BIT.TRGE = 1;
+        S12AD.ADCSR.BIT.ADCS = 0;
         //S12AD.ADADC.BIT.ADC  = 0; //3:加算回数の選択 4times変換 3times加算
         //S12AD.ADADC.BIT.AVEE = 1; //1:加算後の値は平均        
-        //S12AD.ADCER.BIT.ADRFMT = 0; //右詰めフォーマット
+        S12AD.ADCER.BIT.ADRFMT = 0; //右詰めフォーマット
         //S12AD.ADADS0.BIT.ADS0 = 0x0000; //1:変換値加算モード選択 0：非選択
+    }
+    void initS12AD1(){
+        SYSTEM.PRCR.WORD = 0xA502;
+        MSTP(S12AD1) = 0;
+        SYSTEM.PRCR.WORD = 0xA500;
 
         S12AD1.ADCSR.BIT.EXTRG = 1;
         S12AD1.ADCSR.BIT.TRGE = 1;
@@ -187,9 +239,9 @@ namespace peripheral_driver {
         //S12AD1.ADADC.BIT.AVEE = 1; //1:加算後の値は平均
         S12AD1.ADCER.BIT.ADRFMT = 0; //右詰めフォーマット
         //S12AD1.ADADS0.BIT.ADS0 = 0x0000; //1:変換値加算モード選択 0：非選択
-        //S12AD1.ADADS1.BIT.ADS1 = 0x0000; //1:変換値加算モード選択 0：非選択
-        
+        //S12AD1.ADADS1.BIT.ADS1 = 0x0000; //1:変換値加算モード選択 0：非選択        
     }
+
 
     uint16_t startAD_AN000() {
         S12AD.ADANSA0.WORD = 0x0001;
