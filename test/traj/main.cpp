@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "turnPreCalculation.h"
 
+// Obj
+#include "trajectoryFactory.h"
+#include "turnEnum.h"
+
 
 constexpr float DELTA_T = 0.001f;
 constexpr float DEG2RAD = 3.1415926535f / 180.0f;
@@ -277,6 +281,18 @@ int main() {
         printf("%5.1f, %10f, %10f, %7.2f, %7.3f \n", v, pre_dist, fol_dist, beta_max, end_time);
 
     }
+
+    printf("-- straight --\n");
+    printf("v_max, v_turn, a, time \n");
+    for(float v_turn = 1.0f; v_turn < 2.1f; v_turn +=0.2f) {
+        for(float a = 10.0f; a < 26.0f; a+= 5.0f){
+            float x = 0.09f * 14.0f;
+            float v_max = 6.0f;
+            float time = StraightFactory::create(ETurnType::STRAIGHT_CENTER, x, v_turn, v_max, v_turn, a, a)->getNecessaryTime();
+            printf("%5.1f, %5.1f, %5.1f, %5.3f \n", v_max, v_turn, a, time);
+        }
+    }
+
 
     return 0;
 }

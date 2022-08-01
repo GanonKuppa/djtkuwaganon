@@ -180,7 +180,7 @@ float StraightTrajectory::getEndYaw() {
 }
 
 float StraightTrajectory::getNecessaryTime() {
-    _delta_t = 0.01;
+    _delta_t = 0.001;
     float necessary_time = 0.0f;
 
     while(_cumulative_dist < _target_dist) {
